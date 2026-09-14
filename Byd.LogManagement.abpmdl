@@ -1,0 +1,63 @@
+{
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {},
+      "host": {}
+    }
+  },
+  "packages": {
+    "Byd.LogManagement.Domain.Shared": {
+      "path": "src/Byd.LogManagement.Domain.Shared/Byd.LogManagement.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "Byd.LogManagement.Domain": {
+      "path": "src/Byd.LogManagement.Domain/Byd.LogManagement.Domain.abppkg",
+      "folder": "src"
+    },
+    "Byd.LogManagement.Application.Contracts": {
+      "path": "src/Byd.LogManagement.Application.Contracts/Byd.LogManagement.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Byd.LogManagement.Application": {
+      "path": "src/Byd.LogManagement.Application/Byd.LogManagement.Application.abppkg",
+      "folder": "src"
+    },
+    "Byd.LogManagement.EntityFrameworkCore": {
+      "path": "src/Byd.LogManagement.EntityFrameworkCore/Byd.LogManagement.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "Byd.LogManagement.HttpApi": {
+      "path": "src/Byd.LogManagement.HttpApi/Byd.LogManagement.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "Byd.LogManagement.HttpApi.Client": {
+      "path": "src/Byd.LogManagement.HttpApi.Client/Byd.LogManagement.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "Byd.LogManagement.TestBase": {
+      "path": "test/Byd.LogManagement.TestBase/Byd.LogManagement.TestBase.abppkg",
+      "folder": "test"
+    },
+    "Byd.LogManagement.EntityFrameworkCore.Tests": {
+      "path": "test/Byd.LogManagement.EntityFrameworkCore.Tests/Byd.LogManagement.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "Byd.LogManagement.Domain.Tests": {
+      "path": "test/Byd.LogManagement.Domain.Tests/Byd.LogManagement.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "Byd.LogManagement.Application.Tests": {
+      "path": "test/Byd.LogManagement.Application.Tests/Byd.LogManagement.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "Byd.LogManagement.HttpApi.Host": {
+      "path": "host/Byd.LogManagement.HttpApi.Host/Byd.LogManagement.HttpApi.Host.abppkg",
+      "folder": "host"
+    },
+    "Byd.LogManagement.Host.Shared": {
+      "path": "host/Byd.LogManagement.Host.Shared/Byd.LogManagement.Host.Shared.abppkg",
+      "folder": "host"
+    }
+  }
+}

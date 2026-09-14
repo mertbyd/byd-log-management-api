@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/host/">
+    <Project Path="host/Byd.LogManagement.Host.Shared/Byd.LogManagement.Host.Shared.csproj" />
+    <Project Path="host/Byd.LogManagement.HttpApi.Host/Byd.LogManagement.HttpApi.Host.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Byd.LogManagement.Application.Contracts/Byd.LogManagement.Application.Contracts.csproj" />
+    <Project Path="src/Byd.LogManagement.Application/Byd.LogManagement.Application.csproj" />
+    <Project Path="src/Byd.LogManagement.Domain.Shared/Byd.LogManagement.Domain.Shared.csproj" />
+    <Project Path="src/Byd.LogManagement.Domain/Byd.LogManagement.Domain.csproj" />
+    <Project Path="src/Byd.LogManagement.EntityFrameworkCore/Byd.LogManagement.EntityFrameworkCore.csproj" />
+    <Project Path="src/Byd.LogManagement.HttpApi.Client/Byd.LogManagement.HttpApi.Client.csproj" />
+    <Project Path="src/Byd.LogManagement.HttpApi/Byd.LogManagement.HttpApi.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Byd.LogManagement.Application.Tests/Byd.LogManagement.Application.Tests.csproj" />
+    <Project Path="test/Byd.LogManagement.Domain.Tests/Byd.LogManagement.Domain.Tests.csproj" />
+    <Project Path="test/Byd.LogManagement.EntityFrameworkCore.Tests/Byd.LogManagement.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="test/Byd.LogManagement.TestBase/Byd.LogManagement.TestBase.csproj" />
+  </Folder>
+</Solution>
