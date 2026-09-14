@@ -25,7 +25,7 @@ namespace Byd.LogManagement;
     typeof(AbpAutofacModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule))]
-// islevi: File HTTP hostunun ABP modul kompozisyonunu kurar ve tuketilen core modulunu bu host'a baglar.
+// islevi: Log HTTP hostunun ABP modul kompozisyonunu kurar ve tuketilen core modulunu bu host'a baglar.
 // sistemdeki gorevi: Log modulunu ayaga kaldiran calistirilabilir host; core semasini cozer, core modul ayarini beyan eder ve core pipeline'ini takar.
 public class LogManagementHttpApiHostModule : AbpModule
 {
@@ -70,6 +70,7 @@ public class LogManagementHttpApiHostModule : AbpModule
         });
         app.UseRateLimiter();
         app.UseCoreExtensions();//core module 
+        app.UseAuditing();
         app.UseConfiguredEndpoints();
         return Task.CompletedTask;
     }
