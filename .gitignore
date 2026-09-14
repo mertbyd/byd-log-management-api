@@ -153,6 +153,8 @@ PublishScripts/
 
 # NuGet Packages
 *.nupkg
+# Local NuGet sources and credentials; each developer maintains their own file.
+NuGet.Config
 # The packages folder can be ignored because of Package Restore
 **/packages/*
 # except build/, which is used as an MSBuild target.
@@ -257,5 +259,7 @@ paket-files/
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
-appsettings*.json
 Jenkinsfile
+
+# Local development configuration; her gelistirici kendi baglanti bilgisini tutar.
+host/**/appsettings.Development.json
