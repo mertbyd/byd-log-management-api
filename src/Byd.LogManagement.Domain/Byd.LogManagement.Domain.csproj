@@ -17,4 +17,8 @@
   <ItemGroup>
     <PackageReference Include="Byd.CoreExtensions.Domain" Version="0.3.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Byd.LogManagement.Application" />
+  </ItemGroup>
 </Project>

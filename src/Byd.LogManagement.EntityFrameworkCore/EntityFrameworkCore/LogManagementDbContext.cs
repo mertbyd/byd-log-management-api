@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Byd.CoreExtensions.Extensions;
+using Byd.CoreExtensions.EntityFrameworkCore;
+using Byd.LogManagement.Entities.ActivityLogs;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace Byd.LogManagement.EntityFrameworkCore;
 
 [ConnectionStringName(LogManagementDbProperties.ConnectionStringName)]
-public class LogManagementDbContext : AbpDbContext<LogManagementDbContext>, ILogManagementDbContext
+public class LogManagementDbContext : BydDbContext<LogManagementDbContext>, ILogManagementDbContext
 {
-    /* Add DbSet for each Aggregate Root here. Example:
-     * public DbSet<Question> Questions { get; set; }
-     */
+    public DbSet<ActivityLog> ActivityLogs { get; set; }
 
     public LogManagementDbContext(DbContextOptions<LogManagementDbContext> options)
         : base(options)
