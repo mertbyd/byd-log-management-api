@@ -37,11 +37,11 @@ namespace Byd.LogManagement.Migrations
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("CreationTime");
+                        .HasColumnName("creation_time");
 
                     b.Property<Guid?>("CreatorId")
                         .HasColumnType("uuid")
-                        .HasColumnName("CreatorId");
+                        .HasColumnName("creator_id");
 
                     b.Property<string>("Description")
                         .IsRequired()

@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Byd.CoreExtensions.Domain" Version="0.3.1" />
+    <PackageReference Include="Byd.CoreExtensions.Domain" Version="0.3.2" />
   </ItemGroup>
 
   <ItemGroup>

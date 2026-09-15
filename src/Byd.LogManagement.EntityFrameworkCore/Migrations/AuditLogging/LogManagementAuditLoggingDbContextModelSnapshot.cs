@@ -33,44 +33,44 @@ namespace Byd.LogManagement.Migrations.AuditLogging
                     b.Property<string>("ApplicationName")
                         .HasMaxLength(96)
                         .HasColumnType("character varying(96)")
-                        .HasColumnName("ApplicationName");
+                        .HasColumnName("application_name");
 
                     b.Property<string>("BrowserInfo")
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)")
-                        .HasColumnName("BrowserInfo");
+                        .HasColumnName("browser_info");
 
                     b.Property<string>("ClientId")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)")
-                        .HasColumnName("ClientId");
+                        .HasColumnName("client_id");
 
                     b.Property<string>("ClientIpAddress")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)")
-                        .HasColumnName("ClientIpAddress");
+                        .HasColumnName("client_ip_address");
 
                     b.Property<string>("ClientName")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)")
-                        .HasColumnName("ClientName");
+                        .HasColumnName("client_name");
 
                     b.Property<string>("Comments")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
-                        .HasColumnName("Comments");
+                        .HasColumnName("comments");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)")
-                        .HasColumnName("ConcurrencyStamp");
+                        .HasColumnName("concurrency_stamp");
 
                     b.Property<string>("CorrelationId")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)")
-                        .HasColumnName("CorrelationId");
+                        .HasColumnName("correlation_id");
 
                     b.Property<string>("Exceptions")
                         .HasColumnType("text")
@@ -78,7 +78,7 @@ namespace Byd.LogManagement.Migrations.AuditLogging
 
                     b.Property<int>("ExecutionDuration")
                         .HasColumnType("integer")
-                        .HasColumnName("ExecutionDuration");
+                        .HasColumnName("execution_duration");
 
                     b.Property<DateTime>("ExecutionTime")
                         .HasColumnType("timestamp with time zone")
@@ -87,57 +87,57 @@ namespace Byd.LogManagement.Migrations.AuditLogging
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
+                        .HasColumnName("extra_properties");
 
                     b.Property<string>("HttpMethod")
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)")
-                        .HasColumnName("HttpMethod");
+                        .HasColumnName("http_method");
 
                     b.Property<int?>("HttpStatusCode")
                         .HasColumnType("integer")
-                        .HasColumnName("HttpStatusCode");
+                        .HasColumnName("http_status_code");
 
                     b.Property<Guid?>("ImpersonatorTenantId")
                         .HasColumnType("uuid")
-                        .HasColumnName("ImpersonatorTenantId");
+                        .HasColumnName("impersonator_tenant_id");
 
                     b.Property<string>("ImpersonatorTenantName")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)")
-                        .HasColumnName("ImpersonatorTenantName");
+                        .HasColumnName("impersonator_tenant_name");
 
                     b.Property<Guid?>("ImpersonatorUserId")
                         .HasColumnType("uuid")
-                        .HasColumnName("ImpersonatorUserId");
+                        .HasColumnName("impersonator_user_id");
 
                     b.Property<string>("ImpersonatorUserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
-                        .HasColumnName("ImpersonatorUserName");
+                        .HasColumnName("impersonator_user_name");
 
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uuid")
-                        .HasColumnName("TenantId");
+                        .HasColumnName("tenant_id");
 
                     b.Property<string>("TenantName")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)")
-                        .HasColumnName("TenantName");
+                        .HasColumnName("tenant_name");
 
                     b.Property<string>("Url")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
-                        .HasColumnName("Url");
+                        .HasColumnName("url");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid")
-                        .HasColumnName("UserId");
+                        .HasColumnName("user_id");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
-                        .HasColumnName("UserName");
+                        .HasColumnName("user_name");
 
                     b.HasKey("Id")
                         .HasName("pk_audit_logs");
@@ -161,38 +161,38 @@ namespace Byd.LogManagement.Migrations.AuditLogging
 
                     b.Property<Guid>("AuditLogId")
                         .HasColumnType("uuid")
-                        .HasColumnName("AuditLogId");
+                        .HasColumnName("audit_log_id");
 
                     b.Property<int>("ExecutionDuration")
                         .HasColumnType("integer")
-                        .HasColumnName("ExecutionDuration");
+                        .HasColumnName("execution_duration");
 
                     b.Property<DateTime>("ExecutionTime")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("ExecutionTime");
+                        .HasColumnName("execution_time");
 
                     b.Property<string>("ExtraProperties")
                         .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
+                        .HasColumnName("extra_properties");
 
                     b.Property<string>("MethodName")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)")
-                        .HasColumnName("MethodName");
+                        .HasColumnName("method_name");
 
                     b.Property<string>("Parameters")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)")
-                        .HasColumnName("Parameters");
+                        .HasColumnName("parameters");
 
                     b.Property<string>("ServiceName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
-                        .HasColumnName("ServiceName");
+                        .HasColumnName("service_name");
 
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uuid")
-                        .HasColumnName("TenantId");
+                        .HasColumnName("tenant_id");
 
                     b.HasKey("Id")
                         .HasName("pk_audit_log_actions");
@@ -201,7 +201,7 @@ namespace Byd.LogManagement.Migrations.AuditLogging
                         .HasDatabaseName("ix_audit_log_actions_audit_log_id");
 
                     b.HasIndex("TenantId", "ServiceName", "MethodName", "ExecutionTime")
-                        .HasDatabaseName("ix_audit_log_actions_tenant_id_service_name_method_name_execution_ti");
+                        .HasDatabaseName("ix_audit_log_actions_tenant_id_service_name_method_name_executio");
 
                     b.ToTable("AuditLogActions", "log_management");
 
@@ -216,20 +216,20 @@ namespace Byd.LogManagement.Migrations.AuditLogging
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("CreationTime");
+                        .HasColumnName("creation_time");
 
                     b.Property<Guid?>("CreatorId")
                         .HasColumnType("uuid")
-                        .HasColumnName("CreatorId");
+                        .HasColumnName("creator_id");
 
                     b.Property<string>("FileName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
-                        .HasColumnName("FileName");
+                        .HasColumnName("file_name");
 
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uuid")
-                        .HasColumnName("TenantId");
+                        .HasColumnName("tenant_id");
 
                     b.HasKey("Id")
                         .HasName("pk_audit_log_excel_files");
@@ -247,20 +247,20 @@ namespace Byd.LogManagement.Migrations.AuditLogging
 
                     b.Property<Guid>("AuditLogId")
                         .HasColumnType("uuid")
-                        .HasColumnName("AuditLogId");
+                        .HasColumnName("audit_log_id");
 
                     b.Property<DateTime>("ChangeTime")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("ChangeTime");
+                        .HasColumnName("change_time");
 
                     b.Property<byte>("ChangeType")
                         .HasColumnType("smallint")
-                        .HasColumnName("ChangeType");
+                        .HasColumnName("change_type");
 
                     b.Property<string>("EntityId")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)")
-                        .HasColumnName("EntityId");
+                        .HasColumnName("entity_id");
 
                     b.Property<Guid?>("EntityTenantId")
                         .HasColumnType("uuid")
@@ -270,15 +270,15 @@ namespace Byd.LogManagement.Migrations.AuditLogging
                         .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)")
-                        .HasColumnName("EntityTypeFullName");
+                        .HasColumnName("entity_type_full_name");
 
                     b.Property<string>("ExtraProperties")
                         .HasColumnType("text")
-                        .HasColumnName("ExtraProperties");
+                        .HasColumnName("extra_properties");
 
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uuid")
-                        .HasColumnName("TenantId");
+                        .HasColumnName("tenant_id");
 
                     b.HasKey("Id")
                         .HasName("pk_entity_changes");
@@ -307,28 +307,28 @@ namespace Byd.LogManagement.Migrations.AuditLogging
                     b.Property<string>("NewValue")
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)")
-                        .HasColumnName("NewValue");
+                        .HasColumnName("new_value");
 
                     b.Property<string>("OriginalValue")
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)")
-                        .HasColumnName("OriginalValue");
+                        .HasColumnName("original_value");
 
                     b.Property<string>("PropertyName")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)")
-                        .HasColumnName("PropertyName");
+                        .HasColumnName("property_name");
 
                     b.Property<string>("PropertyTypeFullName")
                         .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)")
-                        .HasColumnName("PropertyTypeFullName");
+                        .HasColumnName("property_type_full_name");
 
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uuid")
-                        .HasColumnName("TenantId");
+                        .HasColumnName("tenant_id");
 
                     b.HasKey("Id")
                         .HasName("pk_entity_property_changes");
