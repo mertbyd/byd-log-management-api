@@ -16,6 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.PostgreSql" Version="10.3.0" />
-    <PackageReference Include="Byd.CoreExtensions.EntityFrameworkCore" Version="0.3.0" />
+    <PackageReference Include="Byd.CoreExtensions.EntityFrameworkCore" Version="0.3.1" />
   </ItemGroup>
 </Project>

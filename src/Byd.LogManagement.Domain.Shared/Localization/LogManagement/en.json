@@ -2,6 +2,9 @@
   "culture": "en",
   "texts": {
     "MyAccount":  "My account",
-    "SamplePageMessage": "A sample page for the LogManagement module"
+    "SamplePageMessage": "A sample page for the LogManagement module",
+    "Permission:LogManagement": "Log management",
+    "Permission:ActivityLogs": "Activity logs",
+    "Permission:ActivityLogs.View": "View activity logs"
   }
 }

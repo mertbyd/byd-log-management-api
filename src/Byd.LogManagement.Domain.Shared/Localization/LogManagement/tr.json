@@ -2,6 +2,9 @@
   "culture": "tr",
   "texts": {
     "MyAccount":  "Hesabım",
-    "SamplePageMessage": "LogManagement modulünden örnek bir sayfa"
+    "SamplePageMessage": "LogManagement modulünden örnek bir sayfa",
+    "Permission:LogManagement": "Log yönetimi",
+    "Permission:ActivityLogs": "Etkinlik kayıtları",
+    "Permission:ActivityLogs.View": "Etkinlik kayıtlarını görüntüleme"
   }
 }
