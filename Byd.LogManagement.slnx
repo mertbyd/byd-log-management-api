@@ -9,6 +9,7 @@
     <Project Path="src/Byd.LogManagement.Domain.Shared/Byd.LogManagement.Domain.Shared.csproj" />
     <Project Path="src/Byd.LogManagement.Domain/Byd.LogManagement.Domain.csproj" />
     <Project Path="src/Byd.LogManagement.EntityFrameworkCore/Byd.LogManagement.EntityFrameworkCore.csproj" />
+    <Project Path="src/Byd.LogManagement.Collector/Byd.LogManagement.Collector.csproj" />
     <Project Path="src/Byd.LogManagement.HttpApi.Client/Byd.LogManagement.HttpApi.Client.csproj" />
     <Project Path="src/Byd.LogManagement.HttpApi/Byd.LogManagement.HttpApi.csproj" />
   </Folder>
