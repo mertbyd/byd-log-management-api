@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Byd.LogManagement.Migrations
 {
     [DbContext(typeof(LogManagementDbContext))]
-    [Migration("20260915121318_CreateActivityLogsTable")]
+    [Migration("20260915131421_CreateActivityLogsTable")]
     partial class CreateActivityLogsTable
     {
         /// <inheritdoc />
@@ -40,11 +40,11 @@ namespace Byd.LogManagement.Migrations
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("creation_time");
+                        .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
                         .HasColumnType("uuid")
-                        .HasColumnName("creator_id");
+                        .HasColumnName("CreatorId");
 
                     b.Property<string>("Description")
                         .IsRequired()

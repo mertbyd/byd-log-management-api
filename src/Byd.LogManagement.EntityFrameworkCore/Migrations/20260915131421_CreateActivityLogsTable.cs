@@ -30,8 +30,8 @@ namespace Byd.LogManagement.Migrations
                     application_name = table.Column<string>(type: "text", nullable: false),
                     kind = table.Column<int>(type: "integer", nullable: false),
                     description = table.Column<string>(type: "jsonb", nullable: false),
-                    creation_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    creator_id = table.Column<Guid>(type: "uuid", nullable: true)
+                    CreationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -12,7 +12,7 @@ namespace Byd.LogManagement.EntityFrameworkCore.Configurations.ActivityLogs;
 /// <summary>
 /// ActivityLog entity'sinin EF Core tablo ve kolon sozlesmesini tanimlar.
 /// </summary>
-// islevi: Etkinlik kaydi tablo adini, semasini, snake_case audit kolonlarini ve dil basina cumle kolonunu map eder.
+// islevi: Etkinlik kaydi tablo adini, semasini ve dil basina cumle kolonunu map eder.
 // sistemdeki gorevi: ActivityLogs tablosunun PostgreSQL semasindaki tek EF konfigurasyon sahibidir.
 public sealed class ActivityLogConfiguration : IEntityTypeConfiguration<ActivityLog>
 {
@@ -21,10 +21,6 @@ public sealed class ActivityLogConfiguration : IEntityTypeConfiguration<Activity
     {
         builder.ToTable(ActivityLogConsts.TableName, LogManagementDbProperties.DbSchema);
         builder.ConfigureByConvention();
-
-        // ConfigureByConvention bu iki kolona kendi adini verir; diger kolonlar gibi snake_case olmalari icin ad acikca verilir.
-        builder.Property(entity => entity.CreationTime).HasColumnName(ActivityLogConsts.CreationTimeColumnName);
-        builder.Property(entity => entity.CreatorId).HasColumnName(ActivityLogConsts.CreatorIdColumnName);
 
         // Dil -> hazir cumle sozlugu tek jsonb kolonunda tutulur; satir eklendikten sonra degismedigi icin referans karsilastirmasi yeterlidir.
         builder.Property(entity => entity.Description)
