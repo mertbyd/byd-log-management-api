@@ -36,7 +36,7 @@ public class ActivityLog : CreationAuditedEntity<Guid>
     // Dil -> hazir cumle sozlugu; listelerken istek dilindeki cumle buradan secilir.
     public Dictionary<string, string> Description { get; internal set; } = [];
 
-    // EF Core materializasyonu ve olaydan satir kuran mapper icin parametresiz ctor; kimligi ABP ekleme aninda verir.
+    // EF Core materializasyonu ve olaydan satir kuran uzanti icin parametresiz ctor; kimligi ABP ekleme aninda verir.
     internal ActivityLog()
     {
     }
