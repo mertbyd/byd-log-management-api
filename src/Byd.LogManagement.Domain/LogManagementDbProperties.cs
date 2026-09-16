@@ -8,5 +8,5 @@ public static class LogManagementDbProperties
 
     public static string? DbSchema { get; set; } = DatabaseConsts.ModuleSchema;
 
-    public const string ConnectionStringName = "LogManagement";
+    public const string ConnectionStringName = "Default";
 }

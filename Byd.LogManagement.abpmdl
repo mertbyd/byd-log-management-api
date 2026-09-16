@@ -58,6 +58,10 @@
     "Byd.LogManagement.Host.Shared": {
       "path": "host/Byd.LogManagement.Host.Shared/Byd.LogManagement.Host.Shared.abppkg",
       "folder": "host"
+    },
+    "Byd.LogManagement.Collector": {
+      "path": "src/Byd.LogManagement.Collector/Byd.LogManagement.Collector.abppkg",
+      "folder": "src"
     }
   }
 }

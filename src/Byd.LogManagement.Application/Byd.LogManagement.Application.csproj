@@ -16,6 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Byd.CoreExtensions.Application" Version="0.3.0" />
+    <PackageReference Include="Byd.CoreExtensions.Application" Version="0.3.2" />
+    <PackageReference Include="SystemStandards.Core" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 </Project>

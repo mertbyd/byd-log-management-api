@@ -18,6 +18,7 @@ using Volo.Abp.Swashbuckle;
 namespace Byd.LogManagement;
 
 [DependsOn(
+    typeof(LogManagementCollectorModule),
     typeof(LogManagementApplicationModule),
     typeof(LogManagementEntityFrameworkCoreModule),
     typeof(LogManagementHttpApiModule),
