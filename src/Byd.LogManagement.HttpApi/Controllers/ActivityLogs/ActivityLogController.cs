@@ -39,7 +39,7 @@ public class ActivityLogController : LogManagementController
     [Authorize(LogManagementPermissions.ActivityLogs.View)]
     public virtual async Task<Result<PagedResultDto<ActivityLogDto>>> GetFilteredListAsync(
         [FromBody] DataTableListInput<ActivityLogFilter> input,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var result = await AppService.GetFilteredListAsync(input, cancellationToken);
         return result;

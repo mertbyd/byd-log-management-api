@@ -39,10 +39,10 @@ public class ExternalServiceLogController : LogManagementController
     /// doner. Bu endpoint yeni kayit yazmaz.
     /// </remarks>
     [HttpPost(ExternalServiceLogRoutes.FilteredList)]
-    [Authorize(LogManagementPermissions.ExternalServiceLogs.View)]
+   // [Authorize(LogManagementPermissions.ExternalServiceLogs.View)]
     public virtual async Task<Result<PagedResultDto<ExternalServiceLogDto>>> GetFilteredListAsync(
         [FromBody] DataTableListInput<ExternalServiceLogFilter> input,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken  = default)
     {
         var result = await AppService.GetFilteredListAsync(input, cancellationToken);
         return result;
@@ -58,10 +58,10 @@ public class ExternalServiceLogController : LogManagementController
     /// dondurur. Eslesen cagri yoksa bos liste doner. Bu endpoint yeni kayit yazmaz.
     /// </remarks>
     [HttpGet(ExternalServiceLogRoutes.ByCorrelationId)]
-    [Authorize(LogManagementPermissions.ExternalServiceLogs.View)]
+    //[Authorize(LogManagementPermissions.ExternalServiceLogs.View)]
     public virtual async Task<Result<List<ExternalServiceLogDto>>> GetListByCorrelationIdAsync(
         [FromRoute] string correlationId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var result = await AppService.GetListByCorrelationIdAsync(correlationId, cancellationToken);
         return result;
