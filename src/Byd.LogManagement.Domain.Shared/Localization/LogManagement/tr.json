@@ -5,6 +5,8 @@
     "SamplePageMessage": "LogManagement modulünden örnek bir sayfa",
     "Permission:LogManagement": "Log yönetimi",
     "Permission:ActivityLogs": "Etkinlik kayıtları",
-    "Permission:ActivityLogs.View": "Etkinlik kayıtlarını görüntüleme"
+    "Permission:ActivityLogs.View": "Etkinlik kayıtlarını görüntüleme",
+    "Permission:ExternalServiceLogs": "Dış servis çağrı kayıtları",
+    "Permission:ExternalServiceLogs.View": "Dış servis çağrı kayıtlarını görüntüleme"
   }
 }

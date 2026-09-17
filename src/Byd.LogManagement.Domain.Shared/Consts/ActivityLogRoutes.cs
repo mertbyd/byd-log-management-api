@@ -9,5 +9,4 @@ public static class ActivityLogRoutes
 {
     public const string Root = "api/log-management/activity-logs";
     public const string FilteredList = "filtered-list";
-    public const string FilteredCount = "filtered-count";
 }

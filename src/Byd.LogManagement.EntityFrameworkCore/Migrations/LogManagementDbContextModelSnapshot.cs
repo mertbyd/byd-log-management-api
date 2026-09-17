@@ -88,6 +88,72 @@ namespace Byd.LogManagement.Migrations
 
                     b.ToView(null, (string)null);
                 });
+
+            modelBuilder.Entity("Byd.LogManagement.Entities.ExternalServiceLogs.ExternalServiceLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CorrelationId")
+                        .HasColumnType("text")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("creation_time");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("ExceptionMessage")
+                        .HasColumnType("text")
+                        .HasColumnName("exception_message");
+
+                    b.Property<double>("ExecutionDuration")
+                        .HasColumnType("double precision")
+                        .HasColumnName("execution_duration");
+
+                    b.Property<string>("ExternalServiceProviderName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("external_service_provider_name");
+
+                    b.Property<string>("MethodName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("method_name");
+
+                    b.Property<string>("ModuleName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("module_name");
+
+                    b.Property<string>("RequestType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("request_type");
+
+                    b.Property<int>("ResponseCode")
+                        .HasColumnType("integer")
+                        .HasColumnName("response_code");
+
+                    b.Property<string>("ResponseData")
+                        .HasColumnType("text")
+                        .HasColumnName("response_data");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_time");
+
+                    b.HasKey("Id")
+                        .HasName("pk_external_service_logs");
+
+                    b.ToTable("ExternalServiceLogs", "log_management");
+
+                    b.ToView(null, (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }

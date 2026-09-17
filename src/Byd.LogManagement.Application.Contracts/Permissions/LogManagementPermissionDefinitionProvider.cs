@@ -19,6 +19,7 @@ public partial class LogManagementPermissionDefinitionProvider : PermissionDefin
             L(LogManagementLocalizationKeys.Permissions.Group));
 
         AddActivityLogsPermissions(group);
+        AddExternalServiceLogsPermissions(group);
     }
 
     // Localization anahtarini modul kaynagina baglar.
