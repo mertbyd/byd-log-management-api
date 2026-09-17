@@ -17,5 +17,5 @@ public interface IActivityLogAppService : IApplicationService
     // Filtre, siralama ve sayfalama uygulanmis etkinlik kayitlariyla toplam sayiyi getirir.
     Task<PagedResultDto<ActivityLogDto>> GetFilteredListAsync(
         DataTableListInput<ActivityLogFilter> input,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken=default);
 }

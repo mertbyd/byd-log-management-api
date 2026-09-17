@@ -18,10 +18,10 @@ public interface IExternalServiceLogAppService : IApplicationService
     // Filtre, siralama ve sayfalama uygulanmis dis servis cagri kayitlariyla toplam sayiyi getirir.
     Task<PagedResultDto<ExternalServiceLogDto>> GetFilteredListAsync(
         DataTableListInput<ExternalServiceLogFilter> input,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken=default);
 
     // Ayni correlation kimligine bagli dis servis cagrilarini getirir.
     Task<List<ExternalServiceLogDto>> GetListByCorrelationIdAsync(
         string correlationId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken=default);
 }
