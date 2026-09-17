@@ -32,8 +32,7 @@ public class ExternalServiceLogAppService : LogManagementAppService, IExternalSe
         DataTableListInput<ExternalServiceLogFilter> input,
         CancellationToken cancellationToken=default)
     {
-        // Test amaciyla CancellationToken'i test edebilmeniz icin 15 saniyelik bekleme:
-        await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
+       
         await ListValidator.ValidateAndThrowAsync(input, cancellationToken);
         var entities = await Repository.GetFilteredListAsync(input, cancellationToken);
         var totalCount = await Repository.GetFilteredCountAsync(input, cancellationToken);
