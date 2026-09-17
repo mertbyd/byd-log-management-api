@@ -32,7 +32,7 @@ public class ActivityLogAppService : LogManagementAppService, IActivityLogAppSer
     // Liste girdisini dogrular, filtreli sayfayi ve toplam sayiyi tek sonuc olarak getirir.
     public virtual async Task<PagedResultDto<ActivityLogDto>> GetFilteredListAsync(
         DataTableListInput<ActivityLogFilter> input,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken=default)
     {
         await ListValidator.ValidateAndThrowAsync(input, cancellationToken);
         var entities = await Repository.GetFilteredListAsync(input, cancellationToken);

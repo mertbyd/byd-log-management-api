@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -29,8 +30,10 @@ public class ExternalServiceLogAppService : LogManagementAppService, IExternalSe
     // Liste girdisini dogrular, filtreli sayfayi ve toplam sayiyi tek sonuc olarak getirir.
     public virtual async Task<PagedResultDto<ExternalServiceLogDto>> GetFilteredListAsync(
         DataTableListInput<ExternalServiceLogFilter> input,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken=default)
     {
+        // Test amaciyla CancellationToken'i test edebilmeniz icin 15 saniyelik bekleme:
+        await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
         await ListValidator.ValidateAndThrowAsync(input, cancellationToken);
         var entities = await Repository.GetFilteredListAsync(input, cancellationToken);
         var totalCount = await Repository.GetFilteredCountAsync(input, cancellationToken);
@@ -41,7 +44,7 @@ public class ExternalServiceLogAppService : LogManagementAppService, IExternalSe
     // Ayni correlation kimligine bagli dis servis cagrilarini DTO listesine esler.
     public virtual async Task<List<ExternalServiceLogDto>> GetListByCorrelationIdAsync(
         string correlationId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken=default)
     {
         var entities = await Repository.GetListByCorrelationIdAsync(correlationId, cancellationToken);
         return entities.Select(Mapper.Map).ToList();
