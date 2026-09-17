@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Byd.CoreExtensions.Querying;
 using Byd.LogManagement.Dtos.ExternalServiceLogs;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
 namespace Byd.LogManagement.Services.ExternalServiceLogs;
@@ -9,13 +11,17 @@ namespace Byd.LogManagement.Services.ExternalServiceLogs;
 /// <summary>
 /// Dis servis cagri kaydi okuma kullanim senaryolarini tanimlar.
 /// </summary>
-// islevi: Filtreli liste ve sayim sozlesmesini controller'a acar.
+// islevi: Filtreli sayfa ve toplam kayit sayisini tek sozlesmeyle controller'a acar.
 // sistemdeki gorevi: HttpApi katmaninin dis servis cagri kaydi okumasi icin bildigi tek servis sozlesmesidir.
 public interface IExternalServiceLogAppService : IApplicationService
 {
-    // Filtre, siralama ve sayfalama uygulanmis dis servis cagri kaydi listesini getirir.
-    Task<List<ExternalServiceLogDto>> GetFilteredListAsync(DataTableListInput<ExternalServiceLogFilter> input);
+    // Filtre, siralama ve sayfalama uygulanmis dis servis cagri kayitlariyla toplam sayiyi getirir.
+    Task<PagedResultDto<ExternalServiceLogDto>> GetFilteredListAsync(
+        DataTableListInput<ExternalServiceLogFilter> input,
+        CancellationToken cancellationToken);
 
-    // Ayni filtreye uyan toplam kayit sayisini getirir.
-    Task<int> GetFilteredCountAsync(DataTableListInput<ExternalServiceLogFilter> input);
+    // Ayni correlation kimligine bagli dis servis cagrilarini getirir.
+    Task<List<ExternalServiceLogDto>> GetListByCorrelationIdAsync(
+        string correlationId,
+        CancellationToken cancellationToken);
 }

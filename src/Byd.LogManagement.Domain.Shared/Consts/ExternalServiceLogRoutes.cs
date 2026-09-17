@@ -9,5 +9,5 @@ public static class ExternalServiceLogRoutes
 {
     public const string Root = "api/log-management/external-service-logs";
     public const string FilteredList = "filtered-list";
-    public const string FilteredCount = "filtered-count";
+    public const string ByCorrelationId = "by-correlation-id/{correlationId}";
 }

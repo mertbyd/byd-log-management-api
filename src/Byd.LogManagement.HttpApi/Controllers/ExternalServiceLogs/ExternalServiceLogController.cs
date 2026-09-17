@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using Byd.LogManagement.Dtos.ExternalServiceLogs;
 using Byd.LogManagement.Permissions;
 using Byd.LogManagement.Services.ExternalServiceLogs;
 using SystemStandards.Results;
+using Volo.Abp.Application.Dtos;
 
 namespace Byd.LogManagement.Controllers.ExternalServiceLogs;
 
@@ -28,34 +30,40 @@ public class ExternalServiceLogController : LogManagementController
     /// Filtre, siralama ve sayfalama uygulanmis dis servis cagri kayitlarini getirir.
     /// </summary>
     /// <param name="input">Dis servis cagri kaydi filtre, siralama ve sayfalama bilgileri.</param>
+    /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Response value elemanlari kayit Id, cagriyi baslatan istegin correlation kimligi, cagrilan dis servis
-    /// saglayicisi, cagriyi yapan tuketici modul, cagrilan uc ve istek tipi, cagrinin baslama zamani ve suresi,
-    /// donen HTTP durum kodu, varsa hata mesaji, ham yanit govdesi ve satirin yazildigi zamani tasir. Eslesen
-    /// kayit yoksa bos liste doner. Bu endpoint yeni kayit yazmaz.
+    /// Response value, eslesen toplam kayit sayisini ve sayfadaki kayitlari tasir. Kayit elemanlari Id, cagriyi
+    /// baslatan istegin correlation kimligi, cagrilan dis servis saglayicisi, cagriyi yapan tuketici modul,
+    /// cagrilan uc ve istek tipi, cagrinin baslama zamani ve suresi, donen HTTP durum kodu, varsa hata mesaji,
+    /// ham yanit govdesi ve satirin yazildigi zamani icerir. Eslesen kayit yoksa toplam sayi sifir ve liste bos
+    /// doner. Bu endpoint yeni kayit yazmaz.
     /// </remarks>
     [HttpPost(ExternalServiceLogRoutes.FilteredList)]
     [Authorize(LogManagementPermissions.ExternalServiceLogs.View)]
-    public virtual async Task<Result<List<ExternalServiceLogDto>>> GetFilteredList(
-        [FromBody] DataTableListInput<ExternalServiceLogFilter> input)
+    public virtual async Task<Result<PagedResultDto<ExternalServiceLogDto>>> GetFilteredListAsync(
+        [FromBody] DataTableListInput<ExternalServiceLogFilter> input,
+        CancellationToken cancellationToken)
     {
-        var result = await AppService.GetFilteredListAsync(input);
+        var result = await AppService.GetFilteredListAsync(input, cancellationToken);
         return result;
     }
 
     /// <summary>
-    /// Verilen filtrelere uyan dis servis cagri kayitlarinin toplam sayisini getirir.
+    /// Ayni istegin correlation kimligiyle kaydedilen dis servis cagrilarini getirir.
     /// </summary>
-    /// <param name="input">Sayimda kullanilacak dis servis cagri kaydi filtre bilgileri.</param>
+    /// <param name="correlationId">Iliskili dis servis cagrilarini birlestiren correlation kimligi.</param>
+    /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Liste endpointiyle ayni filtre kurallari uygulanir; response value eslesen kayit sayisidir.
+    /// Response value, verilen correlation kimligine bagli dis servis cagrilarini baslama zamanina gore sirali
+    /// dondurur. Eslesen cagri yoksa bos liste doner. Bu endpoint yeni kayit yazmaz.
     /// </remarks>
-    [HttpPost(ExternalServiceLogRoutes.FilteredCount)]
+    [HttpGet(ExternalServiceLogRoutes.ByCorrelationId)]
     [Authorize(LogManagementPermissions.ExternalServiceLogs.View)]
-    public virtual async Task<Result<int>> GetFilteredCount(
-        [FromBody] DataTableListInput<ExternalServiceLogFilter> input)
+    public virtual async Task<Result<List<ExternalServiceLogDto>>> GetListByCorrelationIdAsync(
+        [FromRoute] string correlationId,
+        CancellationToken cancellationToken)
     {
-        var result = await AppService.GetFilteredCountAsync(input);
+        var result = await AppService.GetListByCorrelationIdAsync(correlationId, cancellationToken);
         return result;
     }
 }

@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using Byd.CoreExtensions.Querying;
@@ -7,6 +7,7 @@ using Byd.LogManagement.Dtos.ActivityLogs;
 using Byd.LogManagement.Interfaces.ActivityLogs;
 using Byd.LogManagement.Managers.ActivityLogs;
 using Byd.LogManagement.Mappers.ActivityLogs;
+using Volo.Abp.Application.Dtos;
 
 namespace Byd.LogManagement.Services.ActivityLogs;
 
@@ -28,20 +29,15 @@ public class ActivityLogAppService : LogManagementAppService, IActivityLogAppSer
     private IValidator<DataTableListInput<ActivityLogFilter>> ListValidator =>
         LazyGetRequiredService<IValidator<DataTableListInput<ActivityLogFilter>>>();
 
-    // Liste girdisini dogrular, filtreye uyan satirlari getirir ve her birini istek dilindeki aciklamasiyla esler.
-    public virtual async Task<List<ActivityLogDto>> GetFilteredListAsync(DataTableListInput<ActivityLogFilter> input)
+    // Liste girdisini dogrular, filtreli sayfayi ve toplam sayiyi tek sonuc olarak getirir.
+    public virtual async Task<PagedResultDto<ActivityLogDto>> GetFilteredListAsync(
+        DataTableListInput<ActivityLogFilter> input,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationTokenProvider.Token;
         await ListValidator.ValidateAndThrowAsync(input, cancellationToken);
         var entities = await Repository.GetFilteredListAsync(input, cancellationToken);
-        return [.. entities.Select(entity => Mapper.Map(entity, Manager.Describe(entity)))];
-    }
-
-    // Liste girdisini dogrular ve ayni filtreye uyan kayit sayisini dondurur.
-    public virtual async Task<int> GetFilteredCountAsync(DataTableListInput<ActivityLogFilter> input)
-    {
-        var cancellationToken = CancellationTokenProvider.Token;
-        await ListValidator.ValidateAndThrowAsync(input, cancellationToken);
-        return await Repository.GetFilteredCountAsync(input, cancellationToken);
+        var totalCount = await Repository.GetFilteredCountAsync(input, cancellationToken);
+        var items = entities.Select(entity => Mapper.Map(entity, Manager.Describe(entity))).ToList();
+        return new PagedResultDto<ActivityLogDto>(totalCount, items);
     }
 }

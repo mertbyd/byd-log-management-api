@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using Byd.CoreExtensions.Querying;
 using Byd.LogManagement.Dtos.ExternalServiceLogs;
 using Byd.LogManagement.Interfaces.ExternalServiceLogs;
 using Byd.LogManagement.Mappers.ExternalServiceLogs;
+using Volo.Abp.Application.Dtos;
 
 namespace Byd.LogManagement.Services.ExternalServiceLogs;
 
@@ -24,21 +26,24 @@ public class ExternalServiceLogAppService : LogManagementAppService, IExternalSe
     private IValidator<DataTableListInput<ExternalServiceLogFilter>> ListValidator =>
         LazyGetRequiredService<IValidator<DataTableListInput<ExternalServiceLogFilter>>>();
 
-    // Liste girdisini dogrular ve filtreye uyan dis servis cagri kayitlarini getirir.
-    public virtual async Task<List<ExternalServiceLogDto>> GetFilteredListAsync(
-        DataTableListInput<ExternalServiceLogFilter> input)
+    // Liste girdisini dogrular, filtreli sayfayi ve toplam sayiyi tek sonuc olarak getirir.
+    public virtual async Task<PagedResultDto<ExternalServiceLogDto>> GetFilteredListAsync(
+        DataTableListInput<ExternalServiceLogFilter> input,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationTokenProvider.Token;
         await ListValidator.ValidateAndThrowAsync(input, cancellationToken);
         var entities = await Repository.GetFilteredListAsync(input, cancellationToken);
-        return [.. entities.Select(Mapper.Map)];
+        var totalCount = await Repository.GetFilteredCountAsync(input, cancellationToken);
+        var items = entities.Select(Mapper.Map).ToList();
+        return new PagedResultDto<ExternalServiceLogDto>(totalCount, items);
     }
 
-    // Liste girdisini dogrular ve ayni filtreye uyan kayit sayisini dondurur.
-    public virtual async Task<int> GetFilteredCountAsync(DataTableListInput<ExternalServiceLogFilter> input)
+    // Ayni correlation kimligine bagli dis servis cagrilarini DTO listesine esler.
+    public virtual async Task<List<ExternalServiceLogDto>> GetListByCorrelationIdAsync(
+        string correlationId,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationTokenProvider.Token;
-        await ListValidator.ValidateAndThrowAsync(input, cancellationToken);
-        return await Repository.GetFilteredCountAsync(input, cancellationToken);
+        var entities = await Repository.GetListByCorrelationIdAsync(correlationId, cancellationToken);
+        return entities.Select(Mapper.Map).ToList();
     }
 }

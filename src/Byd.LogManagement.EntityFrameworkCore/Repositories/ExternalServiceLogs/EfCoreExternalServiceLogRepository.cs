@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Byd.CoreExtensions.Repositories;
 using Byd.LogManagement.Entities.ExternalServiceLogs;
 using Byd.LogManagement.Interfaces.ExternalServiceLogs;
@@ -22,5 +26,17 @@ public class EfCoreExternalServiceLogRepository
         IDbContextProvider<LogManagementDbContext> dbContextProvider)
         : base(dbContextProvider)
     {
+    }
+
+    // Correlation kimligine uyan cagrilari baslama zamanina gore sirali olarak veritabanindan okur.
+    public async Task<List<ExternalServiceLog>> GetListByCorrelationIdAsync(
+        string correlationId,
+        CancellationToken cancellationToken)
+    {
+        var queryable = await GetQueryableAsync();
+        var query = queryable
+            .Where(entity => entity.CorrelationId == correlationId)
+            .OrderBy(entity => entity.StartTime);
+        return await AsyncExecuter.ToListAsync(query, cancellationToken);
     }
 }
