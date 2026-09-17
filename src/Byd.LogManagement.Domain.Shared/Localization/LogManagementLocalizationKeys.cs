@@ -10,5 +10,7 @@ public static class LogManagementLocalizationKeys
         public const string Group = "Permission:LogManagement";
         public const string ActivityLogs = "Permission:ActivityLogs";
         public const string ActivityLogsView = "Permission:ActivityLogs.View";
+        public const string ExternalServiceLogs = "Permission:ExternalServiceLogs";
+        public const string ExternalServiceLogsView = "Permission:ExternalServiceLogs.View";
     }
 }

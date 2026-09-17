@@ -5,6 +5,8 @@
     "SamplePageMessage": "A sample page for the LogManagement module",
     "Permission:LogManagement": "Log management",
     "Permission:ActivityLogs": "Activity logs",
-    "Permission:ActivityLogs.View": "View activity logs"
+    "Permission:ActivityLogs.View": "View activity logs",
+    "Permission:ExternalServiceLogs": "External service logs",
+    "Permission:ExternalServiceLogs.View": "View external service logs"
   }
 }
