@@ -1,30 +1,51 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Byd.LogManagement.Consts;
-using Byd.LogManagement.Dtos.Notifications;
+using Byd.LogManagement.Entities.Notifications;
+using Byd.LogManagement.Extensions.Notifications;
 using Byd.LogManagement.Hubs.Notifications;
 using Byd.LogManagement.Interfaces.Notifications;
+using Byd.LogManagement.Managers.Notifications;
 using Volo.Abp.DependencyInjection;
 
 namespace Byd.LogManagement.Senders.Notifications.SignalR;
 
 /// <summary>
-/// Web bildirimini SignalR hub'i uzerinden iletir.
+/// Web kanalinin satirlarini SignalR hub'i uzerinden iletir.
 /// </summary>
-// islevi: Tenant bildirimini tenant grubuna, digerini alicinin butun baglantilarina sabit olay adiyla gonderir.
-// sistemdeki gorevi: INotificationWebSender sozlesmesinin SignalR uygulamasidir; baglantilari ve SSE tasimasini
-// SignalR'in kendisi yonetir.
-public class SignalRNotificationWebSender(IHubContext<NotificationWebHub> hubContext)
-    : INotificationWebSender, ITransientDependency
+// islevi: Her satiri istemcinin dilindeki metinle web mesajina cevirir; tenant bildirimini tenant grubuna, digerini
+// alicinin butun baglantilarina sabit olay adiyla gonderir.
+// sistemdeki gorevi: Web kanalinin gonderim sozlesmesini uygulayan siniftir; baglantilari SignalR yonetir, gonderim
+// gunlugu tutulmaz.
+[ExposeServices(typeof(INotificationSender))]
+public class SignalRNotificationWebSender(
+    NotificationManager notificationManager,
+    IHubContext<NotificationWebHub> hubContext)
+    : INotificationSender, ITransientDependency
 {
-    // Tenant bildirimini tenant'taki herkese, digerini alicinin butun sekmelerine iletir.
-    public virtual Task SendAsync(Guid? tenantId, NotificationWebMessageDto message, CancellationToken cancellationToken = default)
+    // Gondericinin hizmet ettigi web kanalinin is kodu.
+    public virtual int ChannelCode => NotificationConsts.WebChannelCode;
+
+    // Kanalin butun satirlarini paralel iletir.
+    public virtual Task SendAsync(
+        IReadOnlyCollection<Notification> notifications,
+        CancellationToken cancellationToken = default)
     {
-        var clients = message.IsTenantNotification
-            ? hubContext.Clients.Group($"{NotificationConsts.TenantGroupPrefix}:{tenantId}")
-            : hubContext.Clients.User($"{message.RecipientUserId}");
-        return clients.SendAsync(NotificationConsts.WebMessageName, message, cancellationToken);
+        ArgumentNullException.ThrowIfNull(notifications);
+        return Task.WhenAll(notifications.Select(notification => SendAsync(notification, cancellationToken)));
+    }
+
+    // Tenant bildirimini tenant'taki herkese, digerini alicinin butun sekmelerine iletir.
+    private async Task SendAsync(Notification notification, CancellationToken cancellationToken = default)
+    {
+        var message = notification.ToWebMessage(notificationManager.TextOf(notification));
+        var clients = notification.IsTenantNotification
+            ? hubContext.Clients.Group($"{NotificationConsts.TenantGroupPrefix}:{notification.TenantId}")
+            : hubContext.Clients.User($"{notification.RecipientUserId}");
+        await clients.SendAsync(NotificationConsts.WebMessageName, message, cancellationToken);
     }
 }

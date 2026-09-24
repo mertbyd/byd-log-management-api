@@ -20,40 +20,47 @@ namespace Byd.LogManagement.Managers.Notifications;
 /// <summary>
 /// Bildirimin satirlara yazilmasini ve gonderim damgasini yonetir.
 /// </summary>
-// islevi: Olaydaki kanal kodunu lookup kimligine cevirir, tenant bildirimine tek satir, digerine alici basina satir
-// uretir, vadesi gelmis web satirlarini gonderildi olarak damgalar ve istek dilinin hazir metnini secer.
+// islevi: Olaydaki kanal kodlarini lookup kimligine, mobil kanal icin Firebase proje kodunu proje kimligine cevirir; her
+// kanal icin tenant bildirimine tek satir, digerine alici basina satir uretir, vadesi gelmis satirlari gonderildi olarak
+// damgalayip kanal koduna gore gruplar ve istek dilinin hazir metnini secer.
 // sistemdeki gorevi: Tuketiciyi lookup cozme, fan-out ve hangi satirin simdi gidecegi kararindan uzak tutan domain
 // sahibidir.
 public class NotificationManager(
     INotificationRepository repository,
     INotificationChannelRepository channelRepository,
+    FirebaseProjectManager firebaseProjectManager,
     IDataFilter<IMultiTenant> multiTenantFilter) : BaseManager<Notification, Guid>(repository)
 {
-    // Olayi satirlara cevirip ekler ve simdi gonderilecek web satirlarini dondurur.
-    // Vadesi gelmis web satiri gonderildi olarak dogar; ileri tarihli satir gonderilmemis olarak saklanir.
-    public virtual async Task<List<Notification>> HandleRecordedAsync(
+    // Olayi kanal ve alici basina satirlara cevirip ekler ve simdi gonderilecek satirlari kanal koduna gore dondurur.
+    // Vadesi gelmis satir gonderildi olarak dogar; ileri tarihli satir gonderilmemis olarak saklanir.
+    public virtual async Task<IReadOnlyDictionary<int, List<Notification>>> HandleRecordedAsync(
         NotificationRecordedEto eventData,
         CancellationToken cancellationToken = default)
     {
-        var channelId = await ResolveChannelIdAsync(eventData.ChannelCode, cancellationToken);
-        var notifications = BuildNotifications(eventData, channelId);
-        var sent = eventData.ChannelCode == NotificationConsts.WebChannelCode ? MarkDueAsSent(notifications) : [];
+        var channels = await ResolveChannelIdsAsync(eventData.ChannelCodes, cancellationToken);
+        var firebaseProjectId = await ResolveFirebaseProjectIdAsync(eventData, cancellationToken);
+        var notifications = BuildNotifications(eventData, channels, firebaseProjectId);
+        var sent = MarkDueAsSent(notifications);
 
         await Repository.InsertManyAsync(notifications, cancellationToken: cancellationToken);
 
-        return sent;
+        return GroupByChannelCode(sent, channels);
     }
 
-    // Butun tenant'larin vadesi gelmis ama henuz gonderilmemis web satirlarini damgalar ve onlari dondurur.
-    // Tarama host baglaminda calistigi icin tenant filtresi yalniz bu tarama boyunca kapatilir.
+    // Butun tenant'larin vadesi gelmis ama henuz gonderilmemis web ve mobil satirlarini damgalar ve kanal koduna gore
+    // dondurur. Tarama host baglaminda calistigi icin tenant filtresi yalniz bu tarama boyunca kapatilir.
     // Damgali satir bir daha alinmaz; ayni ileri tarihli bildirim iki kez gonderilmez.
-    public virtual async Task<List<Notification>> MarkDueWebAsSentAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyDictionary<int, List<Notification>>> MarkDueAsSentAsync(
+        CancellationToken cancellationToken = default)
     {
-        var channelId = await ResolveChannelIdAsync(NotificationConsts.WebChannelCode, cancellationToken);
+        var channels = await ResolveChannelIdsAsync(
+            [NotificationConsts.WebChannelCode, NotificationConsts.MobileChannelCode],
+            cancellationToken);
+        List<Guid> channelIds = [.. channels.Values];
         var dueTime = Clock.Now;
         using var allTenants = multiTenantFilter.Disable();
         var unsent = await TryGetListByAsync(
-            notification => notification.ChannelId == channelId
+            notification => channelIds.Contains(notification.ChannelId)
                 && notification.SentTime == null
                 && notification.ScheduledTime <= dueTime,
             cancellationToken: cancellationToken);
@@ -61,32 +68,60 @@ public class NotificationManager(
 
         await Repository.UpdateManyAsync(sent, cancellationToken: cancellationToken);
 
-        return sent;
+        return GroupByChannelCode(sent, channels);
     }
 
-    // Istek dilinin hazir metnini secer; once tam kultur adina, sonra iki harfli dile bakar.
-    public virtual string Describe(Notification notification)
+    // Verilen dilin hazir metnini secer; dil verilmezse istegin dili kullanilir. Once tam kultur adina, sonra iki
+    // harfli dile bakilir; ikisi de yoksa bos doner. Mobil gonderim cihazin dilini, web gonderim istegin dilini verir.
+    public virtual string TextOf(Notification notification, string? languageCode = null)
     {
-        var culture = CultureInfo.CurrentUICulture;
-        return notification.Description.GetValueOrDefault(culture.Name)
-            ?? notification.Description.GetValueOrDefault(culture.TwoLetterISOLanguageName)
+        var language = languageCode.IsNullOrWhiteSpace() ? CultureInfo.CurrentUICulture.Name : languageCode;
+        return notification.Data.GetValueOrDefault(language)
+            ?? notification.Data.GetValueOrDefault(language.Split('-')[0])
             ?? string.Empty;
     }
 
-    // Tenant bildirimine tek satir, digerine alici basina bir satir uretir; bos gelen alici listesi satir
-    // uretmez, tenant'taki herkese gitmez. Hepsi ayni grup kimligini tasir, boylece grup guncelleme ve iptal
-    // icerik esitligine degil kimlige bakar.
-    private List<Notification> BuildNotifications(NotificationRecordedEto eventData, Guid channelId)
+    // Her kanal icin tenant bildirimine tek satir, digerine alici basina bir satir uretir; bos gelen alici listesi satir
+    // uretmez, tenant'taki herkese gitmez. Firebase projesi yalniz mobil satira yazilir. Hepsi ayni grup kimligini tasir,
+    // boylece grup guncelleme ve iptal icerik esitligine degil kimlige bakar.
+    private List<Notification> BuildNotifications(
+        NotificationRecordedEto eventData,
+        Dictionary<int, Guid> channels,
+        Guid? firebaseProjectId)
     {
         var notificationGroupId = GuidGenerator.Create();
-        if (eventData.IsTenantNotification)
-            return [eventData.ToNotification(notificationGroupId, channelId, recipient: null)];
+        NotificationRecipientEto?[] recipients = eventData.IsTenantNotification
+            ? [null]
+            : [.. eventData.Recipients.DistinctBy(recipient => recipient.RecipientUserId)];
         return
         [
-            .. eventData.Recipients
-                .DistinctBy(recipient => recipient.RecipientUserId)
-                .Select(recipient => eventData.ToNotification(notificationGroupId, channelId, recipient))
+            .. from channel in channels
+               from recipient in RecipientsOf(channel.Key, eventData, recipients)
+               select eventData.ToNotification(
+                   notificationGroupId,
+                   channel.Value,
+                   channel.Key == NotificationConsts.MobileChannelCode ? firebaseProjectId : null,
+                   recipient)
         ];
+    }
+
+    // Mobil kanala topic verildiyse alici listesi yerine tek topic satiri uretilir; cihaz secimini FCM uyeligi yapar.
+    private static NotificationRecipientEto?[] RecipientsOf(
+        int channelCode,
+        NotificationRecordedEto eventData,
+        NotificationRecipientEto?[] recipients)
+        => channelCode == NotificationConsts.MobileChannelCode && eventData.Topic is not null ? [null] : recipients;
+
+    // Damgalanan satirlari kanal is koduna gore gruplar; satiri olmayan kanal sozlukte yer almaz.
+    // Satirlarin kanal kimligi bu cagrida cozulen lookup'tan geldigi icin her kimligin kod karsiligi vardir.
+    private static Dictionary<int, List<Notification>> GroupByChannelCode(
+        List<Notification> notifications,
+        Dictionary<int, Guid> channels)
+    {
+        var codesByChannelId = channels.ToDictionary(channel => channel.Value, channel => channel.Key);
+        return notifications
+            .GroupBy(notification => codesByChannelId[notification.ChannelId])
+            .ToDictionary(group => group.Key, group => group.ToList());
     }
 
     // Vadesi gelmis satirlari ayni gonderim aniyla damgalar ve onlari dondurur.
@@ -99,12 +134,37 @@ public class NotificationManager(
         return due;
     }
 
-    // Kanalin is kodunu lookup kimligine cevirir; kod tabloda yoksa lokalize NotFound firlatir.
-    private async Task<Guid> ResolveChannelIdAsync(int channelCode, CancellationToken cancellationToken = default)
+    // Kanal is kodlarini tek sorguda lookup kimliklerine cevirir; kodlardan biri tabloda yoksa lokalize NotFound firlatir.
+    private async Task<Dictionary<int, Guid>> ResolveChannelIdsAsync(
+        IEnumerable<int> channelCodes,
+        CancellationToken cancellationToken = default)
     {
-        var channel = await channelRepository.FindAsync(
-            entity => entity.Code == channelCode,
+        List<int?> codes = [.. channelCodes.Distinct().Select(code => (int?)code)];
+        var channels = await channelRepository.GetListAsync(
+            entity => codes.Contains(entity.Code),
             cancellationToken: cancellationToken);
-        return channel?.Id ?? throw new BusinessException(GeneralExceptionCodes.EntityNotFound);
+        if (channels.Count != codes.Count)
+            throw new BusinessException(GeneralExceptionCodes.EntityNotFound);
+        return channels.ToDictionary(channel => channel.Code!.Value, channel => channel.Id);
+    }
+
+    // Mobil kanal istendiyse Firebase projesini olayin tenant'inda is koduyla cozer; mobil kanal yoksa proje aranmaz.
+    // Olay isleyicisi host baglaminda calistigi icin arama olayin tenant'ina gecilerek yapilir.
+    private async Task<Guid?> ResolveFirebaseProjectIdAsync(
+        NotificationRecordedEto eventData,
+        CancellationToken cancellationToken = default)
+    {
+        if (!eventData.ChannelCodes.Contains(NotificationConsts.MobileChannelCode))
+            return null;
+        if (string.IsNullOrWhiteSpace(eventData.FirebaseProjectKey))
+            throw new BusinessException(GeneralExceptionCodes.RequiredValueMissing);
+
+        using (CurrentTenant.Change(eventData.TenantId))
+        {
+            var project = await firebaseProjectManager.EnsureExistsByKeyAsync(
+                eventData.FirebaseProjectKey,
+                cancellationToken);
+            return project.Id;
+        }
     }
 }

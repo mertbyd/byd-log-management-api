@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Byd.CoreExtensions.Providers;
 using Byd.LogManagement.Dtos.Notifications;
@@ -31,7 +31,9 @@ public class NotificationLogger(
             {
                 TenantId = currentTenant.Id,
                 TenantName = currentTenant.Name,
-                ChannelCode = record.ChannelCode,
+                ChannelCodes = record.ChannelCodes,
+                FirebaseProjectKey = record.FirebaseProjectKey,
+                Topic = record.Topic,
                 SenderUserId = currentUser.Id,
                 SenderUserName = currentUser.UserName,
                 ExternalId = record.ExternalId,
@@ -39,7 +41,7 @@ public class NotificationLogger(
                 Title = record.Title,
                 IsTenantNotification = record.IsTenantNotification,
                 ScheduledTime = record.ScheduledTime ?? clock.Now,
-                Description = record.Description,
+                Data = record.Data,
                 Recipients = record.Recipients
             },
             cancellationToken);

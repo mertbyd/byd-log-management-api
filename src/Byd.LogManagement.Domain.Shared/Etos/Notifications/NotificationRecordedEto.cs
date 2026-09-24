@@ -8,7 +8,7 @@ namespace Byd.LogManagement.Etos.Notifications;
 /// <summary>
 /// Uretici uygulamanin istedigi bildirimin dagitik olayi.
 /// </summary>
-// islevi: Bildirimin icerigini, kapsamini, kanalini, vadesini ve alici listesini tasir.
+// islevi: Bildirimin icerigini, kapsamini, kanallarini, vadesini ve alici listesini tasir.
 // sistemdeki gorevi: Uretici uygulama ile merkezi bildirim servisi arasindaki tel sozlesmesidir; sinif
 // Domain.Shared'da durdugu icin uretici uygulama kopya tutmaz, ayni tipi referans eder.
 // Lookup kimligi degil is kodu tasinir; kimlik ortamdan ortama degisir, kod degismez.
@@ -21,8 +21,15 @@ public class NotificationRecordedEto
     // Bildirimin olustugu organizasyon; auth modulu organizasyon bilgisini saglayana kadar bos.
     public Guid? OrganizationId { get; set; }
 
-    // Bildirimin gonderilecegi kanalin is kodu; NotificationConsts icindeki kanal kodlariyla eslesir.
-    public int ChannelCode { get; set; }
+    // Bildirimin gonderilecegi kanallarin is kodlari; NotificationConsts icindeki kanal kodlariyla eslesir ve her kanal
+    // alici basina ayri satir uretir.
+    public List<int> ChannelCodes { get; set; } = [];
+
+    // Mobil kanalin hangi Firebase projesiyle gidecegini soyleyen benzersiz anahtar; mobil kanal istendiyse zorunludur.
+    public string? FirebaseProjectKey { get; set; }
+
+    // Mobil bildirimin gidecegi topic; verildiyse mobil satir alicilara degil topic uyelerine gider.
+    public string? Topic { get; set; }
 
     // Bildirimi baslatan kullanicinin kimligi; sistem uretimi bildirimlerde bos kalir.
     public Guid? SenderUserId { get; set; }
@@ -51,8 +58,8 @@ public class NotificationRecordedEto
     // Bildirimin gonderilebilecegi en erken an; gecmis bir deger anlik gonderim demektir.
     public DateTime ScheduledTime { get; set; }
 
-    // Bildirimin dil basina hazir metni; anahtar kultur adidir (tr, en).
-    public Dictionary<string, string> Description { get; set; } = [];
+    // Uretici modulun doldurdugu serbest anahtarli icerik; su an anahtar dil kodudur (tr, en).
+    public Dictionary<string, string> Data { get; set; } = [];
 
     // Tenant bildirimi degilse bildirimin gonderilecegi alicilar; liste bossa hicbir satir yazilmaz.
     public List<NotificationRecipientEto> Recipients { get; set; } = [];

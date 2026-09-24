@@ -8,7 +8,7 @@ namespace Byd.LogManagement.Entities.Notifications;
 /// <summary>
 /// Gonderilmeyi bekleyen veya gonderilmis tek bir bildirimi tasir.
 /// </summary>
-// islevi: Alici basina tek satirda icerigi, kanali, vadeyi, gonderim ve okunma durumunu saklar.
+// islevi: Alici ve kanal basina tek satirda icerigi, kanali, vadeyi, gonderim ve okunma durumunu saklar.
 // sistemdeki gorevi: Kurallari Manager'a birakan veri kabugudur.
 //
 // Satir gonderimden ONCE yazilir: SentTime bos oldugu surece bildirim kuyruktadir ve degistirilebilir.
@@ -28,6 +28,8 @@ public class Notification : CreationAuditedEntity<Guid>, IMultiTenant
     public Guid NotificationGroupId { get; internal set; }
     // Bildirimin gonderilecegi kanalin lookup kimligi.
     public Guid ChannelId { get; internal set; }
+    // Mobil satirin hangi Firebase projesiyle gidecegi; web satirinda bos.
+    public Guid? FirebaseProjectId { get; internal set; }
     // Bildirimi baslatan kullanicinin kimligi; sistem uretimi bildirimlerde bos.
     public Guid? SenderUserId { get; internal set; }
     // Bildirimin gonderilecegi kullanicinin kimligi; tenant bildiriminde bos.
@@ -46,6 +48,8 @@ public class Notification : CreationAuditedEntity<Guid>, IMultiTenant
     public string ModuleName { get; internal set; } = default!;
     // Bildirim basligi.
     public string Title { get; internal set; } = default!;
+    // Mobil satirin gidecegi topic; doluysa satir alicilara degil topic uyelerine gider.
+    public string? Topic { get; internal set; }
     // Bildirimin tek bir aliciya degil tenant'taki herkese gittigini gosterir.
     // TODO: IsTenantNotification, auth modulu organizasyon bilgisini sagladiginda organizasyon kapsamiyla birlikte guncellenir. çözüm yolu bulunucak !!!!!!!!!!!!!!1
     public bool IsTenantNotification { get; internal set; }
@@ -53,10 +57,9 @@ public class Notification : CreationAuditedEntity<Guid>, IMultiTenant
     public DateTime ScheduledTime { get; internal set; }
     // Bildirimin gonderildigi an; bos olmasi bildirimin hala kuyrukta oldugu anlamina gelir.
     public DateTime? SentTime { get; internal set; }
-    // Bildirimin okundugu an; bos olmasi bildirimin henuz okunmadigi anlamina gelir.
-    public DateTime? ReadTime { get; internal set; }
-    // Bildirimin dil basina hazir metni; listelerken istek dilindeki metin buradan secilir.
-    public Dictionary<string, string> Description { get; internal set; } = [];
+    // Uretici modulun doldurdugu serbest anahtarli icerik; su an dil kodu basina hazir metin tasir ve
+    // gonderirken alicinin diline gore secilir.
+    public Dictionary<string, string> Data { get; internal set; } = [];
 
     // EF Core materializasyonu ve olaydan satir kuran uzanti icin parametresiz ctor; kimligi ABP ekleme aninda verir.
     internal Notification()

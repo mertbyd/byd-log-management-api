@@ -22,13 +22,16 @@ public sealed class NotificationConfiguration : IEntityTypeConfiguration<Notific
         builder.ToTable(NotificationConsts.TableName, LogManagementDbProperties.DbSchema);
         builder.ConfigureByConvention();
 
-        // Dil -> hazir metin sozlugu tek jsonb kolonunda tutulur; satir eklendikten sonra degismedigi icin referans karsilastirmasi yeterlidir.
-        builder.Property(entity => entity.Description)
-            .HasColumnType(NotificationConsts.DescriptionColumnType)
+        // Uretici modulun icerik sozlugu tek jsonb kolonunda tutulur; satir eklendikten sonra degismedigi icin referans karsilastirmasi yeterlidir.
+        builder.Property(entity => entity.Data)
+            .HasColumnType(NotificationConsts.DataColumnType)
             .HasConversion(
-                description => JsonSerializer.Serialize(description, (JsonSerializerOptions?)null),
+                data => JsonSerializer.Serialize(data, (JsonSerializerOptions?)null),
                 json => JsonSerializer.Deserialize<Dictionary<string, string>>(json, (JsonSerializerOptions?)null)!,
                 new ValueComparer<Dictionary<string, string>>(false));
+
+        builder.Property(entity => entity.Topic)
+            .HasMaxLength(NotificationConsts.MaxTopicNameLength);
 
         // Bildirim listeleri her zaman tek bir alicinin kayitlariyla sinirlanir.
         builder.HasIndex(entity => entity.RecipientUserId);

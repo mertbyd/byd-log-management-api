@@ -64,8 +64,8 @@ public static class NotificationConsts
     // FCM'in tek multicast isteginde kabul ettigi en fazla kayit token'i sayisi.
     public const int MaxFirebaseTokensPerRequest = 500;
 
-    // Dil -> hazir metin sozlugunun saklandigi kolon tipi.
-    public const string DescriptionColumnType = "jsonb";
+    // Uretici modulun icerik sozlugunun saklandigi kolon tipi.
+    public const string DataColumnType = "jsonb";
 
     // Lookup kayitlarinin gorunen adi icin ust sinir.
     public const int MaxLookupNameLength = 50;
