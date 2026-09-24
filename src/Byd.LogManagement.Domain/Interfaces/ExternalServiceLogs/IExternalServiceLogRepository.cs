@@ -16,5 +16,5 @@ public interface IExternalServiceLogRepository : IExtendedRepository<ExternalSer
     // Ayni correlation kimligine bagli dis servis cagrilarini getirir.
     Task<List<ExternalServiceLog>> GetListByCorrelationIdAsync(
         string correlationId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 }
