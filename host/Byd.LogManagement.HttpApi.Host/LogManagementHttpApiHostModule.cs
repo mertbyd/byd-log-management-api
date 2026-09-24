@@ -7,6 +7,7 @@ using Microsoft.OpenApi;
 using Byd.CoreExtensions;
 using Byd.CoreExtensions.Extensions;
 using Byd.CoreExtensions.Options;
+using Byd.FileManagement;
 using Byd.LogManagement.EntityFrameworkCore;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
@@ -70,8 +71,10 @@ public class LogManagementHttpApiHostModule : AbpModule
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "LogManagement API");
         });
+        app.UseAuthorization();
         app.UseRateLimiter();
-        app.UseCoreExtensions();//core module 
+        app.UseCoreExtensions();//core module
+        app.UseFileManagement();//file module
         app.UseAuditing();
         app.UseConfiguredEndpoints();
         return Task.CompletedTask;
