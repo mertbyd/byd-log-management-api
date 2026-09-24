@@ -12,6 +12,8 @@ using Byd.LogManagement.Etos.Notifications;
 using Byd.LogManagement.Extensions.Notifications;
 using Byd.LogManagement.Interfaces.Notifications;
 using Volo.Abp;
+using Volo.Abp.Data;
+using Volo.Abp.MultiTenancy;
 
 namespace Byd.LogManagement.Managers.Notifications;
 
@@ -24,7 +26,8 @@ namespace Byd.LogManagement.Managers.Notifications;
 // sahibidir.
 public class NotificationManager(
     INotificationRepository repository,
-    INotificationChannelRepository channelRepository) : BaseManager<Notification, Guid>(repository)
+    INotificationChannelRepository channelRepository,
+    IDataFilter<IMultiTenant> multiTenantFilter) : BaseManager<Notification, Guid>(repository)
 {
     // Olayi satirlara cevirip ekler ve simdi gonderilecek web satirlarini dondurur.
     // Vadesi gelmis web satiri gonderildi olarak dogar; ileri tarihli satir gonderilmemis olarak saklanir.
@@ -37,6 +40,26 @@ public class NotificationManager(
         var sent = eventData.ChannelCode == NotificationConsts.WebChannelCode ? MarkDueAsSent(notifications) : [];
 
         await Repository.InsertManyAsync(notifications, cancellationToken: cancellationToken);
+
+        return sent;
+    }
+
+    // Butun tenant'larin vadesi gelmis ama henuz gonderilmemis web satirlarini damgalar ve onlari dondurur.
+    // Tarama host baglaminda calistigi icin tenant filtresi yalniz bu tarama boyunca kapatilir.
+    // Damgali satir bir daha alinmaz; ayni ileri tarihli bildirim iki kez gonderilmez.
+    public virtual async Task<List<Notification>> MarkDueWebAsSentAsync(CancellationToken cancellationToken = default)
+    {
+        var channelId = await ResolveChannelIdAsync(NotificationConsts.WebChannelCode, cancellationToken);
+        var dueTime = Clock.Now;
+        using var allTenants = multiTenantFilter.Disable();
+        var unsent = await TryGetListByAsync(
+            notification => notification.ChannelId == channelId
+                && notification.SentTime == null
+                && notification.ScheduledTime <= dueTime,
+            cancellationToken: cancellationToken);
+        var sent = MarkDueAsSent(unsent);
+
+        await Repository.UpdateManyAsync(sent, cancellationToken: cancellationToken);
 
         return sent;
     }
