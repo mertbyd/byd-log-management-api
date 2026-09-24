@@ -56,7 +56,7 @@ public static class NotificationConsts
     public const int MaxStatusCodeLength = 128;
 
     // FCM'in gonderim sonucunda dondurdugu hata mesajinin ust siniri.
-    public const int MaxErrorMessageLength = 1024;
+    public const int MaxStatusMessageLength = 1024;
 
     // Topic adinin ust siniri; ad ayni zamanda gonderim gunlugunun hedef kolonuna yazilir.
     public const int MaxTopicNameLength = 128;

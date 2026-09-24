@@ -231,7 +231,7 @@ public class FirebaseNotificationMobileSender(
             Target = target,
             IsSuccess = failure is null,
             StatusCode = failure is null ? null : CodeOf(failure),
-            ErrorMessage = failure is null
+            StatusMessage = failure is null
                 ? messageId
                 : failure.Message.Split('\n')[0].Trim(),
             ExecutionDuration = duration,

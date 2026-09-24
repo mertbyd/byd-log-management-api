@@ -225,11 +225,6 @@ namespace Byd.LogManagement.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("creator_id");
 
-                    b.Property<string>("ErrorMessage")
-                        .HasMaxLength(1024)
-                        .HasColumnType("character varying(1024)")
-                        .HasColumnName("error_message");
-
                     b.Property<double>("ExecutionDuration")
                         .HasColumnType("double precision")
                         .HasColumnName("execution_duration");
@@ -246,6 +241,11 @@ namespace Byd.LogManagement.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)")
                         .HasColumnName("status_code");
+
+                    b.Property<string>("StatusMessage")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)")
+                        .HasColumnName("status_message");
 
                     b.Property<string>("Target")
                         .IsRequired()

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -70,7 +70,7 @@ public class MobileNotificationManager(
             Target = result.Target,
             IsSuccess = result.IsSuccess,
             StatusCode = result.StatusCode?.Truncate(NotificationConsts.MaxStatusCodeLength),
-            ErrorMessage = result.ErrorMessage?.Truncate(NotificationConsts.MaxErrorMessageLength),
+            StatusMessage = result.StatusMessage?.Truncate(NotificationConsts.MaxStatusMessageLength),
             ExecutionDuration = result.ExecutionDuration
         }));
         await Repository.InsertManyAsync(logs, cancellationToken: cancellationToken);
@@ -91,7 +91,7 @@ public class MobileNotificationManager(
         => [.. targets.Select(target => new MobileDeliveryResultModel
         {
             Target = target,
-            ErrorMessage = NotificationConsts.MissingSecretStatusMessage
+            StatusMessage = NotificationConsts.MissingSecretStatusMessage
         })];
 
     // Hedefleri verilen dilin metniyle tek mobil send modeline kurar.

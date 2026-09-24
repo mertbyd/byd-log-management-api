@@ -23,8 +23,8 @@ public sealed class MobileNotificationConfiguration : IEntityTypeConfiguration<M
             .HasMaxLength(NotificationConsts.MaxTargetLength);
         builder.Property(entity => entity.StatusCode)
             .HasMaxLength(NotificationConsts.MaxStatusCodeLength);
-        builder.Property(entity => entity.ErrorMessage)
-            .HasMaxLength(NotificationConsts.MaxErrorMessageLength);
+        builder.Property(entity => entity.StatusMessage)
+            .HasMaxLength(NotificationConsts.MaxStatusMessageLength);
         // Gunluk bildirim satirina aittir; satir silinirse gonderim sonuclari da silinir.
         builder.HasOne<Notification>()
             .WithMany()

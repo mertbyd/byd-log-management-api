@@ -24,8 +24,8 @@ public class MobileNotification : CreationAuditedEntity<Guid>
     // FCM'in dondurdugu hata kodu; basaride bos, hatada saglayicinin verdigi kodu tasir.
     public string? StatusCode { get; internal set; }
 
-    // FCM'in dondurdugu mesaj kimligi ya da hata mesaji.
-    public string? ErrorMessage { get; internal set; }
+    // FCM'in denemeye verdigi aciklama: basaride mesaj kimligi, hatada hata metni.
+    public string? StatusMessage { get; internal set; }
 
     // Gonderimin milisaniye cinsinden suresi.
     public double ExecutionDuration { get; internal set; }
