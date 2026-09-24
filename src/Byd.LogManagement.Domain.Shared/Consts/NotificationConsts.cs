@@ -30,4 +30,10 @@ public static class NotificationConsts
 
     // Mobil uygulamaya gonderilen bildirim kanalinin is kodu.
     public const int MobileChannelCode = 2;
+
+    // Web istemcisine iletilen bildirim olayinin sabit adidir.
+    public const string WebMessageName = "notificationReceived";
+
+    // Tenant bildirimlerinin gittigi SignalR grubunun on ekidir; grup adi "<onek>:<tenantId>" seklindedir.
+    public const string TenantGroupPrefix = "notification-tenant";
 }
