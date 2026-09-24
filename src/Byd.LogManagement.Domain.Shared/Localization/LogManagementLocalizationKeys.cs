@@ -12,5 +12,8 @@ public static class LogManagementLocalizationKeys
         public const string ActivityLogsView = "Permission:ActivityLogs.View";
         public const string ExternalServiceLogs = "Permission:ExternalServiceLogs";
         public const string ExternalServiceLogsView = "Permission:ExternalServiceLogs.View";
+        public const string FirebaseProjects = "Permission:FirebaseProjects";
+        public const string FirebaseProjectsView = "Permission:FirebaseProjects.View";
+        public const string FirebaseProjectsManage = "Permission:FirebaseProjects.Manage";
     }
 }

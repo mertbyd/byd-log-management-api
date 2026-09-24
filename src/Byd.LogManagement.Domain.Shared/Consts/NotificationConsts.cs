@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Byd.LogManagement.Consts;
 
@@ -16,14 +16,59 @@ public static class NotificationConsts
     // Bildirim kanali lookup tablosunun EF model adidir.
     public const string ChannelTableName = "NotificationChannels";
 
+    // Mobil bildirimlerin gonderildigi Firebase projesi tablosunun EF model adidir.
+    public const string FirebaseProjectTableName = "FirebaseProjects";
+
+    // Firebase projesi benzersiz anahtari (slug) icin ust sinir.
+    public const int MaxFirebaseProjectKeyLength = 64;
+
+    // Firebase proje anahtari deseni (kucuk harf, rakam, alt cizgi, tire).
+    public const string FirebaseProjectKeyPattern = "^[a-z0-9-_]+$";
+
+    // FCM servis hesabi dosyalarinin dosya modulundeki kategori adi; dosya modulu kategoriyi adla adresler.
+    public const string FirebaseSecretFileCategoryName = "Firebase project secrets";
+
+    // Mobil gonderim denemelerinin sonucunun tutuldugu tablonun EF model adidir.
+    public const string MobileNotificationTableName = "MobileNotifications";
+
+    // Mobil gonderimin hedefinin (cihaz token'i ya da topic) ust siniri.
+    public const int MaxTargetLength = 512;
+
+    // Projenin FCM secret'i yuklenmediginde gonderim gunlugune yazilan durum mesajidir.
+    public const string MissingSecretStatusMessage = "FirebaseSecretNotFound";
+
+    // Secret gecerli bir servis hesabi olmadigi icin gonderim yapilamadiginda gunluge yazilan durum kodudur.
+    public const string InvalidCredentialStatusCode = "InvalidCredential";
+
+    // FCM'in gonderim sonucunda dondurdugu hata kodunun ust siniri.
+    public const int MaxStatusCodeLength = 128;
+
+    // FCM'in gonderim sonucunda dondurdugu hata mesajinin ust siniri.
+    public const int MaxErrorMessageLength = 1024;
+
+    // Topic adinin ust siniri; ad ayni zamanda gonderim gunlugunun hedef kolonuna yazilir.
+    public const int MaxTopicNameLength = 128;
+
+    // FCM'in topic adinda kabul ettigi karakterlerin deseni.
+    public const string TopicNamePattern = "^[a-zA-Z0-9-_.~%]+$";
+
+    // Kullanici mobil push bildirim kayit token'larinin tutuldugu tablonun EF model adidir.
+    public const string UserMobileTokenTableName = "UserMobileTokens";
+
+    // FCM mobil kayit token'inin ust siniri.
+    public const int MaxDeviceTokenLength = 512;
+
+    // Cihaz dil kodunun ust siniri ("tr", "en-US" gibi).
+    public const int MaxLanguageCodeLength = 10;
+
+    // FCM'in tek multicast isteginde kabul ettigi en fazla kayit token'i sayisi.
+    public const int MaxFirebaseTokensPerRequest = 500;
+
     // Dil -> hazir metin sozlugunun saklandigi kolon tipi.
     public const string DescriptionColumnType = "jsonb";
 
     // Lookup kayitlarinin gorunen adi icin ust sinir.
     public const int MaxLookupNameLength = 50;
-
-    // Bildirim metninin kurulup saklandigi diller.
-    public static readonly IReadOnlyList<string> DescriptionCultureNames = ["tr", "en"];
 
     // Tarayici uzerinden gonderilen bildirim kanalinin is kodu.
     public const int WebChannelCode = 1;

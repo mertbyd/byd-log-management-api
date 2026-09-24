@@ -7,6 +7,21 @@
     "Permission:ActivityLogs": "Activity logs",
     "Permission:ActivityLogs.View": "View activity logs",
     "Permission:ExternalServiceLogs": "External service logs",
-    "Permission:ExternalServiceLogs.View": "View external service logs"
+    "Permission:ExternalServiceLogs.View": "View external service logs",
+    "Permission:FirebaseProjects": "Firebase projects",
+    "Permission:FirebaseProjects.View": "View Firebase projects",
+    "Permission:FirebaseProjects.Manage": "Manage Firebase projects",
+    "LogManagement:010001": "Firebase project name is required.",
+    "LogManagement:010002": "Firebase project name cannot exceed 50 characters.",
+    "LogManagement:010003": "Firebase project key is required.",
+    "LogManagement:010004": "FCM secret file name is required.",
+    "LogManagement:010005": "FCM secret file content is required.",
+    "LogManagement:010008": "Mobile token is required.",
+    "LogManagement:010009": "Mobile token cannot exceed 512 characters.",
+    "LogManagement:010012": "Topic name is required.",
+    "LogManagement:010013": "Topic name cannot exceed 128 characters.",
+    "LogManagement:010014": "Topic name may only contain letters, digits and - _ . ~ % characters.",
+    "LogManagement:010015": "Firebase project key cannot exceed 64 characters.",
+    "LogManagement:010016": "Firebase project key may only contain lowercase letters, digits, underscores, and dashes."
   }
 }

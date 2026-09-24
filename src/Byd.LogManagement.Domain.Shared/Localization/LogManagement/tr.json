@@ -7,6 +7,21 @@
     "Permission:ActivityLogs": "Etkinlik kayıtları",
     "Permission:ActivityLogs.View": "Etkinlik kayıtlarını görüntüleme",
     "Permission:ExternalServiceLogs": "Dış servis çağrı kayıtları",
-    "Permission:ExternalServiceLogs.View": "Dış servis çağrı kayıtlarını görüntüleme"
+    "Permission:ExternalServiceLogs.View": "Dış servis çağrı kayıtlarını görüntüleme",
+    "Permission:FirebaseProjects": "Firebase projeleri",
+    "Permission:FirebaseProjects.View": "Firebase projelerini görüntüleme",
+    "Permission:FirebaseProjects.Manage": "Firebase projelerini yönetme",
+    "LogManagement:010001": "Firebase proje adı zorunludur.",
+    "LogManagement:010002": "Firebase proje adı 50 karakteri aşamaz.",
+    "LogManagement:010003": "Firebase proje anahtarı zorunludur.",
+    "LogManagement:010004": "FCM secret dosyasının adı zorunludur.",
+    "LogManagement:010005": "FCM secret dosyasının içeriği zorunludur.",
+    "LogManagement:010008": "Mobil token zorunludur.",
+    "LogManagement:010009": "Mobil token 512 karakteri aşamaz.",
+    "LogManagement:010012": "Topic adı zorunludur.",
+    "LogManagement:010013": "Topic adı 128 karakteri aşamaz.",
+    "LogManagement:010014": "Topic adı yalnız harf, rakam ve - _ . ~ % karakterlerinden oluşabilir.",
+    "LogManagement:010015": "Firebase proje anahtarı 64 karakteri aşamaz.",
+    "LogManagement:010016": "Firebase proje anahtarı yalnız küçük harf, rakam, alt çizgi ve tire karakterlerinden oluşabilir."
   }
 }
