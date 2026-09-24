@@ -1,4 +1,4 @@
-namespace Byd.LogManagement;
+﻿namespace Byd.LogManagement;
 
 /// <summary>
 /// Modulun is hatasi kod grameri.
