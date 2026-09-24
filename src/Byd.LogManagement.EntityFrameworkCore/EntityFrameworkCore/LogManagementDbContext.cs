@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Byd.CoreExtensions.Extensions;
 using Byd.CoreExtensions.EntityFrameworkCore;
 using Byd.LogManagement.Entities.ActivityLogs;
