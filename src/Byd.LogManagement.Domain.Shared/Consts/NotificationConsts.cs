@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Byd.LogManagement.Consts;
 
@@ -24,6 +24,9 @@ public static class NotificationConsts
 
     // Firebase proje anahtari deseni (kucuk harf, rakam, alt cizgi, tire).
     public const string FirebaseProjectKeyPattern = "^[a-z0-9-_]+$";
+
+    // Firebase proje calisma ortami adi icin ust sinir.
+    public const int MaxEnvironmentLength = 32;
 
     // FCM servis hesabi dosyalarinin dosya modulundeki kategori adi; dosya modulu kategoriyi adla adresler.
     public const string FirebaseSecretFileCategoryName = "Firebase project secrets";

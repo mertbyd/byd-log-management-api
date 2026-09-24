@@ -167,4 +167,20 @@ public class NotificationManager(
             return project.Id;
         }
     }
+
+    // Bildirimin okunma durumunu gunceller; satir yalniz alicisinin kimligiyle bulunur, baskasinin bildirimi
+    // guncellenemez. Tenant bildiriminde alici bos oldugu icin bu yol satiri bulamaz.
+    public virtual async Task UpdateReadStatusAsync(
+        Guid id,
+        Guid recipientUserId,
+        bool isRead,
+        CancellationToken cancellationToken = default)
+    {
+        var notification = (await TryGetByAsync(
+            item => item.Id == id && item.RecipientUserId == recipientUserId,
+            throwIfNotExists: true,
+            cancellationToken: cancellationToken))!;
+        notification.IsRead = isRead;
+        await Repository.UpdateAsync(notification, cancellationToken: cancellationToken);
+    }
 }

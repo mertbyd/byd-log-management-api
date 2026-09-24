@@ -22,6 +22,8 @@
     "LogManagement:010013": "Topic adı 128 karakteri aşamaz.",
     "LogManagement:010014": "Topic adı yalnız harf, rakam ve - _ . ~ % karakterlerinden oluşabilir.",
     "LogManagement:010015": "Firebase proje anahtarı 64 karakteri aşamaz.",
-    "LogManagement:010016": "Firebase proje anahtarı yalnız küçük harf, rakam, alt çizgi ve tire karakterlerinden oluşabilir."
+    "LogManagement:010016": "Firebase proje anahtarı yalnız küçük harf, rakam, alt çizgi ve tire karakterlerinden oluşabilir.",
+    "LogManagement:010017": "Firebase proje ortamı zorunludur.",
+    "LogManagement:010018": "Firebase proje ortamı 32 karakteri aşamaz."
   }
 }

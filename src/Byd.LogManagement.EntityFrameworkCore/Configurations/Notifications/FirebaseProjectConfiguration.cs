@@ -25,10 +25,13 @@ public sealed class FirebaseProjectConfiguration : IEntityTypeConfiguration<Fire
         builder.Property(entity => entity.Key)
             .HasMaxLength(NotificationConsts.MaxFirebaseProjectKeyLength);
 
-        // Ad ve anahtar tenant icinde tektir; Manager ayni kurali is hatasi olarak verir, indeksler son savunmadir.
-        builder.HasIndex(entity => new { entity.TenantId, entity.Name })
+        builder.Property(entity => entity.Environment)
+            .HasMaxLength(NotificationConsts.MaxEnvironmentLength);
+
+        // Ad ve anahtar tenant ile ortam icinde tektir; Manager ayni kurali is hatasi olarak verir.
+        builder.HasIndex(entity => new { entity.TenantId, entity.Environment, entity.Name })
             .IsUnique();
-        builder.HasIndex(entity => new { entity.TenantId, entity.Key })
+        builder.HasIndex(entity => new { entity.TenantId, entity.Environment, entity.Key })
             .IsUnique();
     }
 }

@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Byd.CoreExtensions.Managers;
+using Byd.CoreExtensions.Providers;
 using Byd.FileManagement.Entities.FileCategories;
 using Byd.FileManagement.Managers.FileCategories;
 using Byd.LogManagement.Consts;
@@ -16,23 +17,27 @@ namespace Byd.LogManagement.Managers.Notifications;
 /// <summary>
 /// Firebase projesi normalizasyon, varlik ve mutasyon kurallarini yonetir.
 /// </summary>
-// islevi: Proje adini kanoniklestirir, ad ve kod tekilligini tenant icinde dogrular, entity kurar, alanlarini degistirir
+// islevi: Proje adini kanoniklestirir, ad ve anahtar tekilligini tenant ve ortam icinde dogrular, entity kurar, alanlarini degistirir
 // ve yuklenen secret dosyalari arasindan guncel olani secer.
 // sistemdeki gorevi: AppService'i is kararindan ve data-shell entity'yi davranistan uzak tutan domain sahibidir;
 // projenin FCM secret dosyasinin dosya modulundeki kategorisini de o cozer.
 public class FirebaseProjectManager(
     IFirebaseProjectRepository repository,
-    FileCategoryManager fileCategoryManager) : BaseManager<FirebaseProject, Guid>(repository)
+    FileCategoryManager fileCategoryManager,
+    CurrentEnvironmentNameProvider environmentNameProvider) : BaseManager<FirebaseProject, Guid>(repository)
 {
     // Kimligi verilen projeyi getirir; yoksa BaseManager lokalize NotFound firlatir.
     public virtual async Task<FirebaseProject> EnsureExistsAsync(Guid id, CancellationToken cancellationToken = default)
         => (await TryGetByIdAsync(id, throwIfNotExists: true, cancellationToken))!;
 
-    // Benzersiz anahtariyla projeyi istegin tenant'inda getirir; yoksa lokalize NotFound firlatir.
+    // Benzersiz anahtariyla projeyi istegin tenant ve aktif calisma ortaminda getirir; yoksa lokalize NotFound firlatir.
     public virtual async Task<FirebaseProject> EnsureExistsByKeyAsync(string key, CancellationToken cancellationToken = default)
     {
-        var normalizedKey = NormalizeRequiredKey(key);
-        return (await TryGetByAsync(project => project.Key == normalizedKey, cancellationToken: cancellationToken))!;
+        var normalizedKey = NormalizeCanonicalText(key);
+        var environment = NormalizeCanonicalText(environmentNameProvider.Value);
+        return (await TryGetByAsync(
+            project => project.Key == normalizedKey && project.Environment == environment,
+            cancellationToken: cancellationToken))!;
     }
 
     // FCM secret dosyalarinin kategorisini getirir; seed calismadiysa lokalize NotFound firlatir.
@@ -88,17 +93,23 @@ public class FirebaseProjectManager(
         CancellationToken cancellationToken = default)
     {
         var name = NormalizeRequiredText(model.Name);
-        var key = NormalizeRequiredKey(model.Key);
-        await CheckAlreadyExistsAsync(other => other.Name == name, entity.Id, cancellationToken);
-        await CheckAlreadyExistsAsync(other => other.Key == key, entity.Id, cancellationToken);
+        var key = NormalizeCanonicalText(model.Key);
+        var environment = NormalizeCanonicalText(model.Environment);
+        await CheckAlreadyExistsAsync(
+            other => other.Environment == environment && other.Name == name,
+            entity.Id,
+            cancellationToken);
+        await CheckAlreadyExistsAsync(
+            other => other.Environment == environment && other.Key == key,
+            entity.Id,
+            cancellationToken);
         entity.Name = name;
         entity.Key = key;
+        entity.Environment = environment;
     }
 
-    // Proje anahtarini kucuk harf ve bosluklardan arindirilmis kanonik bicime donusturur.
-    private static string NormalizeRequiredKey(string key)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(key);
-        return key.Trim().ToLowerInvariant();
-    }
+    // Anahtar ve ortam adini karsilastirma ve kalicilik icin kanonik bicime donusturur; zorunluluk ve kirpma
+    // ortak tabandan gelir, kucuk harfe indirme bu modulun kuralidir.
+    private static string NormalizeCanonicalText(string? value)
+        => NormalizeRequiredText(value).ToLowerInvariant();
 }

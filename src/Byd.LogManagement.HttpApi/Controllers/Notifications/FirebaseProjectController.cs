@@ -31,7 +31,7 @@ public class FirebaseProjectController : LogManagementController
     /// <param name="id">Getirilecek FirebaseProject kaydinin kimligi.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Response value { Id, Name, Key, CreationTime }. Kayit istegin tenant'inda aranir; baska tenant'in
+    /// Response value { Id, Name, Key, Environment, CreationTime }. Kayit istegin tenant'inda aranir; baska tenant'in
     /// projesi bulunamadi olarak doner. FCM secret'i bu endpointte okunmaz.
     /// </remarks>
     [HttpGet(FirebaseProjectRoutes.ById)]
@@ -46,7 +46,7 @@ public class FirebaseProjectController : LogManagementController
     /// </summary>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Response value elemanlari { Id, Name, Key, CreationTime } alanlarini tasir. Liste sayfalanmaz;
+    /// Response value elemanlari { Id, Name, Key, Environment, CreationTime } alanlarini tasir. Liste sayfalanmaz;
     /// tenant'ta proje yoksa bos liste doner.
     /// </remarks>
     [HttpGet]
@@ -58,12 +58,11 @@ public class FirebaseProjectController : LogManagementController
     /// <summary>
     /// Istegin tenant'inda yeni bir Firebase projesi olusturur.
     /// </summary>
-    /// <param name="input">Proje adi ve uretici bildirimin projeyi adresledigi sayisal kod.</param>
+    /// <param name="input">Proje adi, anahtari ve calisma ortami.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Request { Name, Code }. Log modulu girdiyi dogrular, ad ve kodun tenant icinde tekilligini denetler ve
-    /// kalici kaydi olusturur. Response value { Id, Name, Code, CreationTime } alanlarini tasir. FCM secret'i bu
-    /// endpointte yuklenmez.
+    /// Request { Name, Key, Environment }. Log modulu girdiyi dogrular, ad ve anahtarin tenant ile ortam icinde
+    /// tekilligini denetler ve kalici kaydi olusturur. FCM secret'i bu endpointte yuklenmez.
     /// </remarks>
     [HttpPost]
     [Authorize(LogManagementPermissions.FirebaseProjects.Manage)]
@@ -73,14 +72,14 @@ public class FirebaseProjectController : LogManagementController
         => await AppService.CreateAsync(input, cancellationToken);
 
     /// <summary>
-    /// Kimligi verilen Firebase projesinin adini ve kodunu gunceller.
+    /// Kimligi verilen Firebase projesinin adini, anahtarini ve calisma ortamini gunceller.
     /// </summary>
     /// <param name="id">Guncellenecek FirebaseProject kaydinin kimligi.</param>
-    /// <param name="input">Yeni proje adi ve sayisal kodu.</param>
+    /// <param name="input">Yeni proje adi, anahtari ve calisma ortami.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Request { Name, Code }. Log modulu kaydin varligini ve ad ile kodun tenant icinde tekilligini denetler.
-    /// Response value guncel { Id, Name, Code, CreationTime } alanlarini tasir.
+    /// Request { Name, Key, Environment }. Log modulu kaydin varligini ve ad ile anahtarin tenant ve ortam icinde
+    /// tekilligini denetler. Response value guncel ortam bilgisini de tasir.
     /// </remarks>
     [HttpPut(FirebaseProjectRoutes.ById)]
     [Authorize(LogManagementPermissions.FirebaseProjects.Manage)]
@@ -115,8 +114,8 @@ public class FirebaseProjectController : LogManagementController
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
     /// Request { FileName, Data }; Data JSON'da base64 olarak gonderilir. Dosya, dosya modulunde projenin
-    /// kimligiyle FCM secret kategorisine yazilir; projenin onceki secret dosyasi yenisi yuklendikten sonra
-    /// silinir. Basarili istekte iceriksiz cevap dondurulur. Secret'i geri okuyan bir endpoint yoktur.
+    /// kimligiyle FCM secret kategorisine yazilir; FirebaseProject kimligi ortama ozel oldugu icin secret da ayni
+    /// ortam kapsamina baglanir. Onceki secret yenisi yuklendikten sonra silinir.
     /// </remarks>
     [HttpPost(FirebaseProjectRoutes.Secret)]
     [Authorize(LogManagementPermissions.FirebaseProjects.Manage)]

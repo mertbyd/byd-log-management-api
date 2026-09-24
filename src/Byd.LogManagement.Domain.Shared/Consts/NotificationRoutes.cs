@@ -1,12 +1,18 @@
 namespace Byd.LogManagement.Consts;
 
 /// <summary>
-/// Web bildirim hub'inin kararli rota sabitini tanimlar.
+/// Kullanici bildirimlerinin HTTP ve SignalR rotalarini tanimlar.
 /// </summary>
-// islevi: Tarayicinin baglandigi SignalR hub rotasini tek merkezde tutar; SSE tasimasi bu rotadan acilir.
-// sistemdeki gorevi: Hub eslemesi ve istemci cagrilari icin tek rota kaynagidir.
+// islevi: Bildirim okundu durumu endpointi ile web bildirim hub'inin kararli rota sozlesmesini tek yerde tutar.
+// sistemdeki gorevi: Controller ile istemcilerin ayni derleme guvenli route degerini kullanmasini saglar.
 public static class NotificationRoutes
 {
+    // Kullanici bildirimleri endpoint ailesinin kok rotasidir.
+    public const string Root = "api/log-management/notifications";
+
+    // Kimligi verilen bildirimin okundu durumunu degistiren rota kalibidir.
+    public const string ReadStatus = "{id:guid}/read-status/{isRead:bool}";
+
     // SignalR bildirim hub'inin baglanti yoludur.
     public const string Hub = "/signalr-hubs/log-management/notifications";
 }

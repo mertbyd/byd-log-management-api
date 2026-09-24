@@ -25,22 +25,16 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
 
     private FirebaseProjectManager Manager =>
         LazyGetRequiredService<FirebaseProjectManager>();
-
     private IFirebaseProjectRepository Repository =>
         LazyGetRequiredService<IFirebaseProjectRepository>();
-
     private IValidator<CreateFirebaseProjectDto> CreateValidator =>
         LazyGetRequiredService<IValidator<CreateFirebaseProjectDto>>();
-
     private IValidator<UpdateFirebaseProjectDto> UpdateValidator =>
         LazyGetRequiredService<IValidator<UpdateFirebaseProjectDto>>();
-
     private IValidator<UploadFirebaseProjectSecretDto> UploadSecretValidator =>
         LazyGetRequiredService<IValidator<UploadFirebaseProjectSecretDto>>();
-
     private IStoredFileAppService StoredFileAppService =>
         LazyGetRequiredService<IStoredFileAppService>();
-
     private IDistributedEventBus DistributedEventBus =>
         LazyGetRequiredService<IDistributedEventBus>();
 
@@ -67,7 +61,6 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
         await Repository.InsertAsync(entity, autoSave: true, cancellationToken: cancellationToken);
         return Mapper.Map(entity);
     }
-
     // Update girdisini dogrular, mevcut entity'yi Manager ile degistirir ve kaydeder.
     public virtual async Task<FirebaseProjectDto> UpdateAsync(
         Guid id,
@@ -81,7 +74,6 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
         await Repository.UpdateAsync(entity, autoSave: true, cancellationToken: cancellationToken);
         return Mapper.Map(entity);
     }
-
     // Kimligi verilen projeyi siler; secret dosyalarinin silinmesi icin dosya modulune ayni UOW icinde haber verir.
     public virtual async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
@@ -93,7 +85,6 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
             ExternalIds = [entity.Id]
         });
     }
-
     // Secret girdisini dogrular, yeni dosyayi yukler ve projenin onceki secret dosyalarini siler.
     // Yeni dosya once yuklenir: yukleme basarisiz olursa eski secret yerinde kalir.
     // Kapsam istekte gelen tenant'tir: proje o tenant'ta aranir ve dosya o tenant'a yazilir.

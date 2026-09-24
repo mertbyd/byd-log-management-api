@@ -9,4 +9,5 @@ public abstract class FirebaseProjectInputDto
 {
     public string Name { get; set; } = default!;
     public string Key { get; set; } = default!;
+    public string Environment { get; set; } = default!;
 }

@@ -23,6 +23,7 @@ public static class NotificationExtensions
         ModuleName = notification.ModuleName,
         Title = notification.Title,
         IsTenantNotification = notification.IsTenantNotification,
+        IsRead = notification.IsRead,
         ScheduledTime = notification.ScheduledTime,
         SentTime = notification.SentTime ?? notification.ScheduledTime,
         Description = description

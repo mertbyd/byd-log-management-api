@@ -169,6 +169,12 @@ namespace Byd.LogManagement.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("creator_id");
 
+                    b.Property<string>("Environment")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("environment");
+
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -192,13 +198,13 @@ namespace Byd.LogManagement.Migrations
                     b.HasKey("Id")
                         .HasName("pk_firebase_projects");
 
-                    b.HasIndex("TenantId", "Key")
+                    b.HasIndex("TenantId", "Environment", "Key")
                         .IsUnique()
-                        .HasDatabaseName("ix_firebase_projects_tenant_id_key");
+                        .HasDatabaseName("ix_firebase_projects_tenant_id_environment_key");
 
-                    b.HasIndex("TenantId", "Name")
+                    b.HasIndex("TenantId", "Environment", "Name")
                         .IsUnique()
-                        .HasDatabaseName("ix_firebase_projects_tenant_id_name");
+                        .HasDatabaseName("ix_firebase_projects_tenant_id_environment_name");
 
                     b.ToTable("FirebaseProjects", "log_management");
 
@@ -288,6 +294,12 @@ namespace Byd.LogManagement.Migrations
                     b.Property<Guid?>("FirebaseProjectId")
                         .HasColumnType("uuid")
                         .HasColumnName("firebase_project_id");
+
+                    b.Property<bool>("IsRead")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_read");
 
                     b.Property<bool>("IsTenantNotification")
                         .HasColumnType("boolean")

@@ -12,5 +12,6 @@ public class FirebaseProjectDto
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
     public string Key { get; set; } = default!;
+    public string Environment { get; set; } = default!;
     public DateTime CreationTime { get; set; }
 }

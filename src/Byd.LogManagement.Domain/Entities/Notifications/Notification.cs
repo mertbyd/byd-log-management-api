@@ -57,6 +57,8 @@ public class Notification : CreationAuditedEntity<Guid>, IMultiTenant
     public DateTime ScheduledTime { get; internal set; }
     // Bildirimin gonderildigi an; bos olmasi bildirimin hala kuyrukta oldugu anlamina gelir.
     public DateTime? SentTime { get; internal set; }
+    // Bildirimin alici tarafindan okunup okunmadigini gosterir.
+    public bool IsRead { get; internal set; }
     // Uretici modulun doldurdugu serbest anahtarli icerik; su an dil kodu basina hazir metin tasir ve
     // gonderirken alicinin diline gore secilir.
     public Dictionary<string, string> Data { get; internal set; } = [];

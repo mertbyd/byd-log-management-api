@@ -33,6 +33,9 @@ public sealed class NotificationConfiguration : IEntityTypeConfiguration<Notific
         builder.Property(entity => entity.Topic)
             .HasMaxLength(NotificationConsts.MaxTopicNameLength);
 
+        builder.Property(entity => entity.IsRead)
+            .HasDefaultValue(false);
+
         // Bildirim listeleri her zaman tek bir alicinin kayitlariyla sinirlanir.
         builder.HasIndex(entity => entity.RecipientUserId);
         // Grup guncelleme ve iptal butun satirlari bu kimlikle toplar.
