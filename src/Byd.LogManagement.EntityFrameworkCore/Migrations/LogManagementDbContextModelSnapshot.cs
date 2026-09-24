@@ -154,6 +154,148 @@ namespace Byd.LogManagement.Migrations
 
                     b.ToView(null, (string)null);
                 });
+
+            modelBuilder.Entity("Byd.LogManagement.Entities.Notifications.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ChannelId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("channel_id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("creation_time");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("description");
+
+                    b.Property<Guid?>("ExternalId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("external_id");
+
+                    b.Property<bool>("IsTenantNotification")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_tenant_notification");
+
+                    b.Property<string>("ModuleName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("module_name");
+
+                    b.Property<Guid>("NotificationGroupId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("notification_group_id");
+
+                    b.Property<Guid?>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<string>("OrganizationName")
+                        .HasColumnType("text")
+                        .HasColumnName("organization_name");
+
+                    b.Property<DateTime?>("ReadTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("read_time");
+
+                    b.Property<Guid?>("RecipientUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("recipient_user_id");
+
+                    b.Property<string>("RecipientUserName")
+                        .HasColumnType("text")
+                        .HasColumnName("recipient_user_name");
+
+                    b.Property<DateTime>("ScheduledTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("scheduled_time");
+
+                    b.Property<Guid?>("SenderUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("sender_user_id");
+
+                    b.Property<string>("SenderUserName")
+                        .HasColumnType("text")
+                        .HasColumnName("sender_user_name");
+
+                    b.Property<DateTime?>("SentTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sent_time");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("TenantName")
+                        .HasColumnType("text")
+                        .HasColumnName("tenant_name");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
+                    b.HasKey("Id")
+                        .HasName("pk_notifications");
+
+                    b.HasIndex("NotificationGroupId")
+                        .HasDatabaseName("ix_notifications_notification_group_id");
+
+                    b.HasIndex("RecipientUserId")
+                        .HasDatabaseName("ix_notifications_recipient_user_id");
+
+                    b.HasIndex("ScheduledTime")
+                        .HasDatabaseName("ix_notifications_scheduled_time");
+
+                    b.ToTable("Notifications", "log_management");
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("Byd.LogManagement.Entities.Notifications.NotificationChannel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int?>("Code")
+                        .HasColumnType("integer")
+                        .HasColumnName("code");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("creation_time");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_notification_channels");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_notification_channels_code");
+
+                    b.ToTable("NotificationChannels", "log_management");
+
+                    b.ToView(null, (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }
