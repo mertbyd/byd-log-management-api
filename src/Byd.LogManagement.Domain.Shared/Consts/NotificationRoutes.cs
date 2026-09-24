@@ -3,7 +3,7 @@ namespace Byd.LogManagement.Consts;
 /// <summary>
 /// Web bildirim hub'inin kararli rota sabitini tanimlar.
 /// </summary>
-// islevi: Tarayicinin baglandigi SignalR hub rotasini tek merkezde tutar; SSE ve WebSocket tasimasi ayni rotadan acilir.
+// islevi: Tarayicinin baglandigi SignalR hub rotasini tek merkezde tutar; SSE tasimasi bu rotadan acilir.
 // sistemdeki gorevi: Hub eslemesi ve istemci cagrilari icin tek rota kaynagidir.
 public static class NotificationRoutes
 {

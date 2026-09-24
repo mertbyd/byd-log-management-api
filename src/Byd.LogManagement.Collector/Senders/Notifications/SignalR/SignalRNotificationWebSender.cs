@@ -14,8 +14,8 @@ namespace Byd.LogManagement.Senders.Notifications.SignalR;
 /// Web bildirimini SignalR hub'i uzerinden iletir.
 /// </summary>
 // islevi: Tenant bildirimini tenant grubuna, digerini alicinin butun baglantilarina sabit olay adiyla gonderir.
-// sistemdeki gorevi: INotificationWebSender sozlesmesinin SignalR uygulamasidir; baglantilari ve secilen tasimayi
-// (SSE ya da WebSocket) SignalR'in kendisi yonetir.
+// sistemdeki gorevi: INotificationWebSender sozlesmesinin SignalR uygulamasidir; baglantilari ve SSE tasimasini
+// SignalR'in kendisi yonetir.
 public class SignalRNotificationWebSender(IHubContext<NotificationWebHub> hubContext)
     : INotificationWebSender, ITransientDependency
 {

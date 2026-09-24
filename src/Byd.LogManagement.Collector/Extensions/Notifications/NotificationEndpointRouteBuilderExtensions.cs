@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Routing;
@@ -10,25 +9,17 @@ namespace Byd.LogManagement.Extensions.Notifications;
 /// <summary>
 /// Web bildirim hub'ini endpoint agacina ekler.
 /// </summary>
-// islevi: Kimligi dogrulanmis istemcinin baglandigi SignalR hub'ini, host'un sectigi tasimayla (SSE ya da WebSocket)
-// esler.
+// islevi: Kimligi dogrulanmis istemcinin baglandigi SignalR hub'ini yalniz SSE tasimasiyla esler.
 // sistemdeki gorevi: Collector modulunun hub'ini host'a yazdirmadan ekledigi tek noktadir; tasimayi SignalR tahmin
-// etmez, yalniz secilen tasima acilir.
+// etmez, istemci her zaman SSE ile baglanir.
 public static class NotificationEndpointRouteBuilderExtensions
 {
-    // Hub'i yalniz secilen tasimayla esler; tanimsiz tasima adi uygulama acilisinda hata verir.
-    public static IEndpointRouteBuilder MapNotificationWebEndpoints(
-        this IEndpointRouteBuilder endpoints,
-        string transportName)
+    // Hub'i yalniz SSE tasimasiyla esler.
+    public static IEndpointRouteBuilder MapNotificationWebEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var transport = transportName switch
-        {
-            NotificationTransportNames.ServerSentEvents => HttpTransportType.ServerSentEvents,
-            NotificationTransportNames.WebSocket => HttpTransportType.WebSockets,
-            _ => throw new ArgumentOutOfRangeException(nameof(transportName), transportName, null)
-        };
-
-        endpoints.MapHub<NotificationWebHub>(NotificationRoutes.Hub, options => options.Transports = transport);
+        endpoints.MapHub<NotificationWebHub>(
+            NotificationRoutes.Hub,
+            options => options.Transports = HttpTransportType.ServerSentEvents);
 
         return endpoints;
     }
