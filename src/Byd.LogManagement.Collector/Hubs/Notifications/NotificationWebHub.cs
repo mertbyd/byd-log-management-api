@@ -9,9 +9,10 @@ namespace Byd.LogManagement.Hubs.Notifications;
 /// Tarayicinin anlik web bildirimi almak icin baglandigi SignalR hub'idir.
 /// </summary>
 // islevi: Acilan baglantiyi tenant grubuna ekler; kullaniciya ozel mesaji SignalR kullanici kimligiyle kendisi eslestirir.
-// sistemdeki gorevi: SignalR gondericisinin kullaniciya ve tenant'a gonderim yaptigi baglantilarin giris noktasidir.
+// sistemdeki gorevi: SignalR gondericisinin kullaniciya ve tenant'a gonderim yaptigi baglantilarin giris noktasidir;
+// uc eslemesi hub'i host'un sectigi tasimayla (SSE ya da WebSocket) esler.
 [Authorize]
-[HubRoute(NotificationRoutes.Hub)]
+[DisableAutoHubMap]
 public class NotificationWebHub : AbpHub
 {
     // Baglantiyi tenant grubuna ekler; tenant bildirimi bu gruba gider.
