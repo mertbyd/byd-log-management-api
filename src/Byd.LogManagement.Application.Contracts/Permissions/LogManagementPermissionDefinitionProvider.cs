@@ -20,6 +20,7 @@ public partial class LogManagementPermissionDefinitionProvider : PermissionDefin
 
         AddActivityLogsPermissions(group);
         AddExternalServiceLogsPermissions(group);
+        AddFirebaseProjectsPermissions(group);
     }
 
     // Localization anahtarini modul kaynagina baglar.

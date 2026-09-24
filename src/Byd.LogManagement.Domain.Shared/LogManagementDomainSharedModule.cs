@@ -8,10 +8,12 @@ using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
 
 using Byd.CoreExtensions;
+using Byd.FileManagement;
 namespace Byd.LogManagement;
 
 [DependsOn(
     typeof(CoreExtensionsDomainSharedModule),
+    typeof(FileManagementDomainSharedModule),
     typeof(AbpValidationModule),
     typeof(AbpDddDomainSharedModule)
 )]

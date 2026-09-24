@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Byd.LogManagement.Consts;
-using Byd.LogManagement.Senders.Notifications.Dispatcher;
+using Byd.LogManagement.Interfaces.Notifications;
 using Byd.LogManagement.Managers.Notifications;
 using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.Threading;
@@ -11,9 +11,10 @@ using Volo.Abp.Uow;
 namespace Byd.LogManagement.Workers.Notifications;
 
 /// <summary>
-/// Vadesi gelen ileri tarihli web bildirimlerini gonderir.
+/// Vadesi gelen ileri tarihli web ve mobil bildirimlerini gonderir.
 /// </summary>
-// islevi: Her turda vadesi gelmis ve gonderilmemis web satirlarini damgalar, damga yazildiktan sonra push eder.
+// islevi: Her turda vadesi gelmis ve gonderilmemis web ve mobil satirlari damgalar, damga yazildiktan sonra kendi
+// gondericilerine verir.
 // sistemdeki gorevi: Ileri tarihli bildirimlerin tek gondericisidir; anlik bildirimi handler gonderir.
 // mirastan gelen:
 //   ABP AsyncPeriodicBackgroundWorkerBase -> StartAsync/StopAsync ve DoWorkAsync hatalarinin loglanmasi
@@ -34,9 +35,10 @@ public class ScheduledNotificationWorker : AsyncPeriodicBackgroundWorkerBase
         var cancellationToken = workerContext.CancellationToken;
         var notificationManager = services.GetRequiredService<NotificationManager>();
         using var unitOfWork = services.GetRequiredService<IUnitOfWorkManager>().Begin();
-        var notifications = await notificationManager.MarkDueWebAsSentAsync(cancellationToken);
+        var due = await notificationManager.MarkDueAsSentAsync(cancellationToken);
         await unitOfWork.CompleteAsync(cancellationToken);
-        await services.GetRequiredService<NotificationWebDispatcher>()
-            .SendManyAsync(notifications, cancellationToken);
+        await services
+            .GetRequiredService<INotificationDispatcher>()
+            .DispatchAsync(due, cancellationToken);
     }
 }

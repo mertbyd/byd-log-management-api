@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Byd.LogManagement.Entities.Notifications;
 using Byd.LogManagement.Etos.Notifications;
 
@@ -13,11 +13,13 @@ namespace Byd.LogManagement.Extensions.Notifications;
 // Gonderim ve okunma alanlari doldurulmaz: satir her zaman kuyrukta ve okunmamis dogar.
 public static class NotificationRecordedEtoExtensions
 {
-    // Olayin icerik alanlarini tek bir alici icin yeni satira tasir; tenant bildiriminde alici verilmez.
+    // Olayin icerik alanlarini tek bir alici ve kanal icin yeni satira tasir; tenant bildiriminde alici, web satirinda
+    // Firebase projesi verilmez.
     public static Notification ToNotification(
         this NotificationRecordedEto source,
         Guid notificationGroupId,
         Guid channelId,
+        Guid? firebaseProjectId,
         NotificationRecipientEto? recipient)
     {
         return new Notification
@@ -26,6 +28,7 @@ public static class NotificationRecordedEtoExtensions
             OrganizationId = source.OrganizationId,
             NotificationGroupId = notificationGroupId,
             ChannelId = channelId,
+            FirebaseProjectId = firebaseProjectId,
             SenderUserId = source.SenderUserId,
             RecipientUserId = recipient?.RecipientUserId,
             ExternalId = source.ExternalId,
@@ -35,9 +38,11 @@ public static class NotificationRecordedEtoExtensions
             RecipientUserName = recipient?.RecipientUserName,
             ModuleName = source.ModuleName,
             Title = source.Title,
+            // Topic mobil kanalin kavramidir; web satiri topic tasimaz.
+            Topic = firebaseProjectId is null ? null : source.Topic,
             IsTenantNotification = source.IsTenantNotification,
             ScheduledTime = source.ScheduledTime,
-            Description = source.Description
+            Data = source.Data
         };
     }
 }

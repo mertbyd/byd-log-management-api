@@ -16,6 +16,9 @@ public class LogManagementDbContext : BydDbContext<LogManagementDbContext>, ILog
     public DbSet<ExternalServiceLog> ExternalServiceLogs { get; set; }
     public DbSet<NotificationChannel> NotificationChannels { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<FirebaseProject> FirebaseProjects { get; set; }
+    public DbSet<UserMobileToken> UserMobileTokens { get; set; }
+    public DbSet<MobileNotification> MobileNotifications { get; set; }
 
     public LogManagementDbContext(DbContextOptions<LogManagementDbContext> options)
         : base(options)

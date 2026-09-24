@@ -155,6 +155,115 @@ namespace Byd.LogManagement.Migrations
                     b.ToView(null, (string)null);
                 });
 
+            modelBuilder.Entity("Byd.LogManagement.Entities.Notifications.FirebaseProject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("creation_time");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("Environment")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("environment");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("key");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid?>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_firebase_projects");
+
+                    b.HasIndex("TenantId", "Environment", "Key")
+                        .IsUnique()
+                        .HasDatabaseName("ix_firebase_projects_tenant_id_environment_key");
+
+                    b.HasIndex("TenantId", "Environment", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_firebase_projects_tenant_id_environment_name");
+
+                    b.ToTable("FirebaseProjects", "log_management");
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("Byd.LogManagement.Entities.Notifications.MobileNotification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("creation_time");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("creator_id");
+
+                    b.Property<double>("ExecutionDuration")
+                        .HasColumnType("double precision")
+                        .HasColumnName("execution_duration");
+
+                    b.Property<bool>("IsSuccess")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_success");
+
+                    b.Property<Guid>("NotificationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("notification_id");
+
+                    b.Property<string>("StatusCode")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)")
+                        .HasColumnName("status_code");
+
+                    b.Property<string>("StatusMessage")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)")
+                        .HasColumnName("status_message");
+
+                    b.Property<string>("Target")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)")
+                        .HasColumnName("target");
+
+                    b.HasKey("Id")
+                        .HasName("pk_mobile_notifications");
+
+                    b.HasIndex("NotificationId")
+                        .HasDatabaseName("ix_mobile_notifications_notification_id");
+
+                    b.ToTable("MobileNotifications", "log_management");
+
+                    b.ToView(null, (string)null);
+                });
+
             modelBuilder.Entity("Byd.LogManagement.Entities.Notifications.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -173,14 +282,24 @@ namespace Byd.LogManagement.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("creator_id");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Data")
                         .IsRequired()
                         .HasColumnType("jsonb")
-                        .HasColumnName("description");
+                        .HasColumnName("data");
 
                     b.Property<Guid?>("ExternalId")
                         .HasColumnType("uuid")
                         .HasColumnName("external_id");
+
+                    b.Property<Guid?>("FirebaseProjectId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("firebase_project_id");
+
+                    b.Property<bool>("IsRead")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_read");
 
                     b.Property<bool>("IsTenantNotification")
                         .HasColumnType("boolean")
@@ -202,10 +321,6 @@ namespace Byd.LogManagement.Migrations
                     b.Property<string>("OrganizationName")
                         .HasColumnType("text")
                         .HasColumnName("organization_name");
-
-                    b.Property<DateTime?>("ReadTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("read_time");
 
                     b.Property<Guid?>("RecipientUserId")
                         .HasColumnType("uuid")
@@ -243,6 +358,11 @@ namespace Byd.LogManagement.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("title");
+
+                    b.Property<string>("Topic")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)")
+                        .HasColumnName("topic");
 
                     b.HasKey("Id")
                         .HasName("pk_notifications");
@@ -295,6 +415,86 @@ namespace Byd.LogManagement.Migrations
                     b.ToTable("NotificationChannels", "log_management");
 
                     b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("Byd.LogManagement.Entities.Notifications.UserMobileToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("creation_time");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("creator_id");
+
+                    b.Property<Guid>("FirebaseProjectId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("firebase_project_id");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("LanguageCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("language_code");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_modification_time");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("last_modifier_id");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)")
+                        .HasColumnName("token");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user_mobile_tokens");
+
+                    b.HasIndex("FirebaseProjectId")
+                        .HasDatabaseName("ix_user_mobile_tokens_firebase_project_id");
+
+                    b.HasIndex("UserId", "FirebaseProjectId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_mobile_tokens_user_id_firebase_project_id");
+
+                    b.ToTable("UserMobileTokens", "log_management");
+
+                    b.ToView(null, (string)null);
+                });
+
+            modelBuilder.Entity("Byd.LogManagement.Entities.Notifications.MobileNotification", b =>
+                {
+                    b.HasOne("Byd.LogManagement.Entities.Notifications.Notification", null)
+                        .WithMany()
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_mobile_notifications_notifications_notification_id");
+                });
+
+            modelBuilder.Entity("Byd.LogManagement.Entities.Notifications.UserMobileToken", b =>
+                {
+                    b.HasOne("Byd.LogManagement.Entities.Notifications.FirebaseProject", null)
+                        .WithMany()
+                        .HasForeignKey("FirebaseProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_mobile_tokens_firebase_projects_firebase_project_id");
                 });
 #pragma warning restore 612, 618
         }
