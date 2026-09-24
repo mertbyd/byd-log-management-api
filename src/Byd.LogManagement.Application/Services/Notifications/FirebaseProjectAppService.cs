@@ -38,9 +38,12 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
     private IDistributedEventBus DistributedEventBus =>
         LazyGetRequiredService<IDistributedEventBus>();
 
-    // Kimligi verilen projeyi Manager guard'i uzerinden getirir.
+    // Kimligi verilen projeyi Core Manager guard'i uzerinden getirir.
     public virtual async Task<FirebaseProjectDto> GetAsync(Guid id, CancellationToken cancellationToken = default)
-        => Mapper.Map(await Manager.EnsureExistsAsync(id, cancellationToken));
+        => Mapper.Map((await Manager.TryGetByIdAsync(
+            id,
+            throwIfNotExists: true,
+            cancellationToken))!);
 
     // Istegin tenant'indaki projeleri repository'den getirir.
     public virtual async Task<List<FirebaseProjectDto>> GetListAsync(CancellationToken cancellationToken = default)
@@ -68,7 +71,10 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
         CancellationToken cancellationToken = default)
     {
         await UpdateValidator.ValidateAndThrowAsync(input, cancellationToken);
-        var entity = await Manager.EnsureExistsAsync(id, cancellationToken);
+        var entity = (await Manager.TryGetByIdAsync(
+            id,
+            throwIfNotExists: true,
+            cancellationToken))!;
         var model = Mapper.Map(input);
         await Manager.UpdateAsync(entity, model, cancellationToken);
         await Repository.UpdateAsync(entity, autoSave: true, cancellationToken: cancellationToken);
@@ -77,7 +83,10 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
     // Kimligi verilen projeyi siler; secret dosyalarinin silinmesi icin dosya modulune ayni UOW icinde haber verir.
     public virtual async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var entity = await Manager.EnsureExistsAsync(id, cancellationToken);
+        var entity = (await Manager.TryGetByIdAsync(
+            id,
+            throwIfNotExists: true,
+            cancellationToken))!;
         await Repository.DeleteAsync(entity, autoSave: true, cancellationToken: cancellationToken);
         await DistributedEventBus.PublishAsync(new ExternalRecordsDeletedEto
         {
@@ -97,7 +106,10 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
         await UploadSecretValidator.ValidateAndThrowAsync(input, cancellationToken);
         // Tenant verilmediyse istegin kendi kapsami korunur; verildiyse o kapsama gecilir.
         using var tenant = CurrentTenant.Change(input.TenantId ?? CurrentTenant.Id);
-        var entity = await Manager.EnsureExistsAsync(id, cancellationToken);
+        var entity = (await Manager.TryGetByIdAsync(
+            id,
+            throwIfNotExists: true,
+            cancellationToken))!;
         var category = await Manager.GetSecretCategoryAsync(cancellationToken);
         var previousFiles = await StoredFileAppService.GetListByCategoryAsync(entity.Id, category.Id);
         await StoredFileAppService.UploadAsync(Mapper.Map(input, entity.Id, category.Id));

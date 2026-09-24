@@ -25,9 +25,5 @@ public abstract class FirebaseProjectInputDtoValidatorBase<TDto> : AbstractValid
             .WithErrorCode(NotificationExceptionCodes.FirebaseProjectKeyTooLong)
             .Matches(NotificationConsts.FirebaseProjectKeyPattern)
             .WithErrorCode(NotificationExceptionCodes.FirebaseProjectKeyInvalid);
-        RuleFor(input => input.Environment)
-            .NotEmpty().WithErrorCode(NotificationExceptionCodes.FirebaseProjectEnvironmentRequired)
-            .MaximumLength(NotificationConsts.MaxEnvironmentLength)
-            .WithErrorCode(NotificationExceptionCodes.FirebaseProjectEnvironmentTooLong);
     }
 }

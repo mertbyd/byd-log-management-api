@@ -28,6 +28,15 @@ public static class NotificationConsts
     // Firebase proje calisma ortami adi icin ust sinir.
     public const int MaxEnvironmentLength = 32;
 
+    // Bildirim gonderiminin ayrildigi iki calisma ortami. Ayni anahtar iki ortamda ayri projeyi gosterebilsin diye
+    // her satir bu iki degerden biriyle damgalanir; deger cagirandan alinmaz, sunucunun ortamindan cozulur.
+    public const string TestEnvironment = "test";
+
+    public const string ProductionEnvironment = "prod";
+
+    // Host'un beyan ettigi ortam adlarindan uretim sayilani; bunun disindaki her ad test kovasina duser.
+    public const string ProductionHostEnvironmentName = "Production";
+
     // FCM servis hesabi dosyalarinin dosya modulundeki kategori adi; dosya modulu kategoriyi adla adresler.
     public const string FirebaseSecretFileCategoryName = "Firebase project secrets";
 

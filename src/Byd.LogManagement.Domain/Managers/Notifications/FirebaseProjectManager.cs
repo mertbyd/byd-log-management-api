@@ -26,15 +26,11 @@ public class FirebaseProjectManager(
     FileCategoryManager fileCategoryManager,
     CurrentEnvironmentNameProvider environmentNameProvider) : BaseManager<FirebaseProject, Guid>(repository)
 {
-    // Kimligi verilen projeyi getirir; yoksa BaseManager lokalize NotFound firlatir.
-    public virtual async Task<FirebaseProject> EnsureExistsAsync(Guid id, CancellationToken cancellationToken = default)
-        => (await TryGetByIdAsync(id, throwIfNotExists: true, cancellationToken))!;
-
     // Benzersiz anahtariyla projeyi istegin tenant ve aktif calisma ortaminda getirir; yoksa lokalize NotFound firlatir.
     public virtual async Task<FirebaseProject> EnsureExistsByKeyAsync(string key, CancellationToken cancellationToken = default)
     {
         var normalizedKey = NormalizeCanonicalText(key);
-        var environment = NormalizeCanonicalText(environmentNameProvider.Value);
+        var environment = ResolveEnvironment();
         return (await TryGetByAsync(
             project => project.Key == normalizedKey && project.Environment == environment,
             cancellationToken: cancellationToken))!;
@@ -94,7 +90,7 @@ public class FirebaseProjectManager(
     {
         var name = NormalizeRequiredText(model.Name);
         var key = NormalizeCanonicalText(model.Key);
-        var environment = NormalizeCanonicalText(model.Environment);
+        var environment = ResolveEnvironment();
         await CheckAlreadyExistsAsync(
             other => other.Environment == environment && other.Name == name,
             entity.Id,
@@ -108,8 +104,17 @@ public class FirebaseProjectManager(
         entity.Environment = environment;
     }
 
-    // Anahtar ve ortam adini karsilastirma ve kalicilik icin kanonik bicime donusturur; zorunluluk ve kirpma
-    // ortak tabandan gelir, kucuk harfe indirme bu modulun kuralidir.
+    // Anahtari karsilastirma ve kalicilik icin kanonik bicime donusturur; zorunluluk ve kirpma ortak tabandan
+    // gelir, kucuk harfe indirme bu modulun kuralidir.
     private static string NormalizeCanonicalText(string? value)
         => NormalizeRequiredText(value).ToLowerInvariant();
+
+    // Host'un beyan ettigi calisma ortamini projenin iki ortamindan birine indirger. Ortam cagirandan alinmaz:
+    // yazim hatasi, hicbir bildirimin bulamayacagi erisilemez bir proje satiri birakirdi. Uretim disindaki her
+    // ortam ayni test kovasina duser, boylece yerel ve staging host'lari ayni projeyi gorur.
+    private string ResolveEnvironment()
+        => environmentNameProvider.Value.Equals(
+            NotificationConsts.ProductionHostEnvironmentName, StringComparison.OrdinalIgnoreCase)
+            ? NotificationConsts.ProductionEnvironment
+            : NotificationConsts.TestEnvironment;
 }

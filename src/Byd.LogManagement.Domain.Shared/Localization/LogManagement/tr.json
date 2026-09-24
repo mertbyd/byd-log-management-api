@@ -18,6 +18,7 @@
     "LogManagement:010005": "FCM secret dosyasının içeriği zorunludur.",
     "LogManagement:010008": "Mobil token zorunludur.",
     "LogManagement:010009": "Mobil token 512 karakteri aşamaz.",
+    "LogManagement:010010": "Dil kodu 10 karakteri aşamaz.",
     "LogManagement:010012": "Topic adı zorunludur.",
     "LogManagement:010013": "Topic adı 128 karakteri aşamaz.",
     "LogManagement:010014": "Topic adı yalnız harf, rakam ve - _ . ~ % karakterlerinden oluşabilir.",

@@ -23,11 +23,7 @@ public static class NotificationExceptionCodes
     // Firebase proje anahtari yalnizca kucuk harf, rakam, alt cizgi ve tire icerebilir.
     public const string FirebaseProjectKeyInvalid = LogManagementErrorCodes.NotificationGroup + "0016";
 
-    // Firebase proje ortami bos gecilemez.
-    public const string FirebaseProjectEnvironmentRequired = LogManagementErrorCodes.NotificationGroup + "0017";
 
-    // Firebase proje ortami ust siniri asamaz.
-    public const string FirebaseProjectEnvironmentTooLong = LogManagementErrorCodes.NotificationGroup + "0018";
 
     // Yuklenen FCM secret dosyasinin adi bos gecilemez.
     public const string FirebaseSecretFileNameRequired = LogManagementErrorCodes.NotificationGroup + "0004";

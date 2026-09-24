@@ -18,6 +18,7 @@
     "LogManagement:010005": "FCM secret file content is required.",
     "LogManagement:010008": "Mobile token is required.",
     "LogManagement:010009": "Mobile token cannot exceed 512 characters.",
+    "LogManagement:010010": "Language code cannot exceed 10 characters.",
     "LogManagement:010012": "Topic name is required.",
     "LogManagement:010013": "Topic name cannot exceed 128 characters.",
     "LogManagement:010014": "Topic name may only contain letters, digits and - _ . ~ % characters.",

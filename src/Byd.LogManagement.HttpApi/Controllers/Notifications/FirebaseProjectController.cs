@@ -61,7 +61,7 @@ public class FirebaseProjectController : LogManagementController
     /// <param name="input">Proje adi, anahtari ve calisma ortami.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Request { Name, Key, Environment }. Log modulu girdiyi dogrular, ad ve anahtarin tenant ile ortam icinde
+    /// Request { Name, Key }. Calisma ortami sunucudan damgalanir. Log modulu girdiyi dogrular, ad ve anahtarin tenant ile ortam icinde
     /// tekilligini denetler ve kalici kaydi olusturur. FCM secret'i bu endpointte yuklenmez.
     /// </remarks>
     [HttpPost]
@@ -78,7 +78,7 @@ public class FirebaseProjectController : LogManagementController
     /// <param name="input">Yeni proje adi, anahtari ve calisma ortami.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Request { Name, Key, Environment }. Log modulu kaydin varligini ve ad ile anahtarin tenant ve ortam icinde
+    /// Request { Name, Key }. Calisma ortami sunucudan damgalanir. Log modulu kaydin varligini ve ad ile anahtarin tenant ve ortam icinde
     /// tekilligini denetler. Response value guncel ortam bilgisini de tasir.
     /// </remarks>
     [HttpPut(FirebaseProjectRoutes.ById)]

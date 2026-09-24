@@ -156,13 +156,12 @@ public class NotificationManager(
     {
         if (!eventData.ChannelCodes.Contains(NotificationConsts.MobileChannelCode))
             return null;
-        if (string.IsNullOrWhiteSpace(eventData.FirebaseProjectKey))
-            throw new BusinessException(GeneralExceptionCodes.RequiredValueMissing);
+        var firebaseProjectKey = NormalizeRequiredText(eventData.FirebaseProjectKey);
 
         using (CurrentTenant.Change(eventData.TenantId))
         {
             var project = await firebaseProjectManager.EnsureExistsByKeyAsync(
-                eventData.FirebaseProjectKey,
+                firebaseProjectKey,
                 cancellationToken);
             return project.Id;
         }
