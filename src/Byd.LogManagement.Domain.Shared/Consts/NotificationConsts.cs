@@ -31,6 +31,13 @@ public static class NotificationConsts
     // Mobil uygulamaya gonderilen bildirim kanalinin is kodu.
     public const int MobileChannelCode = 2;
 
+    // Seed edilen kanal satirlarinin is kodu -> gorunen ad eslemesi.
+    public static readonly IReadOnlyDictionary<int, string> ChannelNames = new Dictionary<int, string>
+    {
+        [WebChannelCode] = "Web",
+        [MobileChannelCode] = "Mobile"
+    };
+
     // Web istemcisine iletilen bildirim olayinin sabit adidir.
     public const string WebMessageName = "notificationReceived";
 

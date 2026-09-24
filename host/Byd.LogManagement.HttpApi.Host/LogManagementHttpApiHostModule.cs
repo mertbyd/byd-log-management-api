@@ -12,6 +12,7 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
+using Volo.Abp.Data;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 
@@ -74,5 +75,11 @@ public class LogManagementHttpApiHostModule : AbpModule
         app.UseAuditing();
         app.UseConfiguredEndpoints();
         return Task.CompletedTask;
+    }
+
+    // Modullerin seed katkilarini (bildirim kanallari vb.) uygulama acilirken idempotent olarak calistirir.
+    public override async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context)
+    {
+        await context.ServiceProvider.GetRequiredService<IDataSeeder>().SeedAsync();
     }
 }
