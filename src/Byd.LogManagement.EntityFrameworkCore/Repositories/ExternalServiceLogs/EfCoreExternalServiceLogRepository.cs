@@ -31,7 +31,7 @@ public class EfCoreExternalServiceLogRepository
     // Correlation kimligine uyan cagrilari baslama zamanina gore sirali olarak veritabanindan okur.
     public async Task<List<ExternalServiceLog>> GetListByCorrelationIdAsync(
         string correlationId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var queryable = await GetQueryableAsync();
         var query = queryable
