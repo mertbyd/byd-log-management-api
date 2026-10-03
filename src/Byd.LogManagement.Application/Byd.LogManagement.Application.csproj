@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Byd.CoreExtensions.Application" Version="0.3.2" />
-    <ProjectReference Include="..\..\..\byd-file-management-api\src\Byd.FileManagement.Application\Byd.FileManagement.Application.csproj" />
+    <PackageReference Include="Byd.CoreExtensions.Application" Version="0.3.8" />
+    <PackageReference Include="Byd.FileManagement.Application" Version="0.1.1" />
     <PackageReference Include="SystemStandards.Core" Version="2.0.0" />
   </ItemGroup>
 

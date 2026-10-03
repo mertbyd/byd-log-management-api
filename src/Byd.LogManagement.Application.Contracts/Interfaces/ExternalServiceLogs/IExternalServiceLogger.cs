@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Byd.LogManagement.Dtos.ExternalServiceLogs;
 
@@ -14,5 +15,8 @@ namespace Byd.LogManagement.Interfaces.ExternalServiceLogs;
 public interface IExternalServiceLogger
 {
     // Cagriyi kaydederek calistirir ve dis servisin ham yanitini dondurur.
-    Task<string> TrackAsync(ExternalServiceCall call, Func<Task<string>> work);
+    Task<string> TrackAsync(
+        ExternalServiceCall call,
+        Func<Task<string>> work,
+        CancellationToken cancellationToken = default);
 }

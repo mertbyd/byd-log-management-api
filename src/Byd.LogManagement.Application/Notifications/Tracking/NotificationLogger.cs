@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Byd.CoreExtensions.Interfaces;
 using Byd.CoreExtensions.Providers;
 using Byd.LogManagement.Dtos.Notifications;
 using Byd.LogManagement.Etos.Notifications;
@@ -21,6 +22,7 @@ public class NotificationLogger(
     INotificationStore notificationStore,
     CurrentModuleNameProvider moduleNameProvider,
     ICurrentTenant currentTenant,
+    ICurrentOrganization currentOrganization,
     ICurrentUser currentUser,
     IClock clock) : INotificationLogger, ITransientDependency
 {
@@ -31,6 +33,8 @@ public class NotificationLogger(
             {
                 TenantId = currentTenant.Id,
                 TenantName = currentTenant.Name,
+                OrganizationId = currentOrganization.Id,
+                OrganizationName = currentOrganization.Name,
                 ChannelCodes = record.ChannelCodes,
                 FirebaseProjectKey = record.FirebaseProjectKey,
                 Topic = record.Topic,

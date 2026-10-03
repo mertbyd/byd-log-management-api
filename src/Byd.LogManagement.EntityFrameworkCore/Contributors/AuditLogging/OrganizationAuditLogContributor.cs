@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+using Byd.CoreExtensions.Interfaces;
 using Byd.LogManagement.Consts;
 using Volo.Abp.Auditing;
 using Volo.Abp.Data;
@@ -16,23 +18,8 @@ public class OrganizationAuditLogContributor : AuditLogContributor
     // Kapsam istegin basinda bellidir; ABP'nin HTTP katkicisi da istek bilgisini bu asamada yazar.
     public override void PreContribute(AuditLogContributionContext context)
     {
-        // TODO: Organizasyon kaynagi - auth modulu organizasyon bilgisini sagladiginda (file ve core'daki
-        // OrganizationId gibi) asagidaki iki null yazimi kaldirilir ve kaynak su iki yoldan biriyle baglanir.
-        //
-        // ICurrentOrganization ile:
-        // var currentOrganization = context.ServiceProvider.GetRequiredService<ICurrentOrganization>();
-        // context.AuditInfo.SetProperty(AuditLoggingConsts.OrganizationIdPropertyName, currentOrganization.Id);
-        // context.AuditInfo.SetProperty(AuditLoggingConsts.OrganizationNamePropertyName, currentOrganization.Name);
-        //
-        // ICurrentUser claim'leri ile; claim tipi sabitleri auth modulunden gelir:
-        // var currentUser = context.ServiceProvider.GetRequiredService<ICurrentUser>();
-        // context.AuditInfo.SetProperty(
-        //     AuditLoggingConsts.OrganizationIdPropertyName,
-        //     ICurrentUser.FindClaimValue(OrganizationClaimTypes.OrganizationId));
-        // context.AuditInfo.SetProperty(
-        //     AuditLoggingConsts.OrganizationNamePropertyName,
-        //     ICurrentUser.FindClaimValue(OrganizationClaimTypes.OrganizationName));
-        context.AuditInfo.SetProperty(AuditLoggingConsts.OrganizationIdPropertyName, null);
-        context.AuditInfo.SetProperty(AuditLoggingConsts.OrganizationNamePropertyName, null);
+        var currentOrganization = context.ServiceProvider.GetRequiredService<ICurrentOrganization>();
+        context.AuditInfo.SetProperty(AuditLoggingConsts.OrganizationIdPropertyName, currentOrganization.Id);
+        context.AuditInfo.SetProperty(AuditLoggingConsts.OrganizationNamePropertyName, currentOrganization.Name);
     }
 }

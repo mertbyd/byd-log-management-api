@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Byd.LogManagement.Etos.ExternalServiceLogs;
 using Byd.LogManagement.Interfaces.ExternalServiceLogs;
@@ -18,10 +19,12 @@ public class DistributedEventExternalServiceLogStore(
     IUnitOfWorkManager unitOfWorkManager) : IExternalServiceLogStore, ITransientDependency
 {
     // Cagri kaydini kendi calisma biriminde olay kutusuna yazar ve birimi hemen tamamlar.
-    public virtual async Task SaveAsync(ExternalServiceLogRecordedEto externalServiceLog)
+    public virtual async Task SaveAsync(
+        ExternalServiceLogRecordedEto externalServiceLog,
+        CancellationToken cancellationToken = default)
     {
         using var unitOfWork = unitOfWorkManager.Begin(requiresNew: true);
         await distributedEventBus.PublishAsync(externalServiceLog);
-        await unitOfWork.CompleteAsync();
+        await unitOfWork.CompleteAsync(cancellationToken);
     }
 }

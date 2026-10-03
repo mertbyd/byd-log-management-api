@@ -31,9 +31,36 @@ public class ActivityLogController : LogManagementController
     /// <param name="input">Etkinlik kaydi filtre, siralama ve sayfalama bilgileri.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Response value, eslesen toplam kayit sayisini ve sayfadaki kayitlari tasir. Kayit elemanlari Id, tenant,
-    /// organizasyon, kullanici, is kaydi kimligi, uygulama adi, etkinlik turu, doldurulmus aciklama ve olusturma
-    /// zamanini icerir. Eslesen kayit yoksa toplam sayi sifir ve liste bos doner. Bu endpoint yeni kayit yazmaz.
+    /// Request {
+    ///   Page              (int)                  → Sayfa numarasi; varsayilan 1
+    ///   PageSize          (int)                  → Sayfa boyutu; varsayilan 10, en fazla 1000
+    ///   Sorting           (DataTableSorting[]?)  → Siralama alanlari ve yonleri
+    ///   Filters           (ActivityLogFilter?)   → Alan bazli filtreler; her alan { Operator, Value, SecondValue, Values } tasir
+    ///     UserId          (DataTableFilterItem?) → Kullanici filtresi
+    ///     ExternalId      (DataTableFilterItem?) → Is kaydi filtresi
+    ///     ApplicationName (DataTableFilterItem?) → Modul filtresi
+    ///     Kind            (DataTableFilterItem?) → Etkinlik turu filtresi
+    ///     CreationTime    (DataTableFilterItem?) → Kayit zamani filtresi
+    /// }
+    /// Response {
+    ///   TotalCount (long)             → Filtreye uyan toplam kayit sayisi
+    ///   Items      (ActivityLogDto[]) → Sayfadaki kayitlar; alanlari asagida
+    /// }
+    /// ActivityLogDto {
+    ///   Id               (Guid)         → Kayit Id'si
+    ///   TenantId         (Guid?)        → Etkinligin tenant'i
+    ///   TenantName       (string?)      → Tenant adi
+    ///   OrganizationId   (Guid?)        → Etkinligin organizasyonu
+    ///   OrganizationName (string?)      → Organizasyon adi
+    ///   UserId           (Guid)         → Islemi yapan kullanici Id'si
+    ///   UserName         (string)       → Islemi yapan kullanici adi
+    ///   ExternalId       (Guid?)        → Etkinligin dokundugu is kaydi Id'si
+    ///   ApplicationName  (string)       → Etkinligi ureten modul
+    ///   Kind             (ActivityKind) → Etkinlik turu
+    ///   Description      (string)       → Istegin dilinde doldurulmus aciklama
+    ///   CreationTime     (DateTime)     → Kayit zamani
+    /// }
+    /// Eslesen kayit yoksa toplam sayi sifir ve liste bos doner. Bu endpoint yeni kayit yazmaz.
     /// </remarks>
     [HttpPost(ActivityLogRoutes.FilteredList)]
     [Authorize(LogManagementPermissions.ActivityLogs.View)]

@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Byd.CoreExtensions.Providers;
 using Byd.LogManagement.Dtos.ExternalServiceLogs;
@@ -25,19 +26,22 @@ public class ExternalServiceLogger(
     IClock clock) : IExternalServiceLogger, ITransientDependency
 {
     // Cagriyi calistirir; yanitini ve suresini merkezi log servisine birakir, istisnayi oldugu gibi yukari verir.
-    public virtual async Task<string> TrackAsync(ExternalServiceCall call, Func<Task<string>> work)
+    public virtual async Task<string> TrackAsync(
+        ExternalServiceCall call,
+        Func<Task<string>> work,
+        CancellationToken cancellationToken = default)
     {
         var startTime = clock.Now;
         var startedAt = Stopwatch.GetTimestamp();
         try
         {
             var response = await work();
-            await RecordAsync(call, startTime, startedAt, response, exception: null);
+            await RecordAsync(call, startTime, startedAt, response, exception: null, cancellationToken);
             return response;
         }
         catch (Exception exception)
         {
-            await RecordAsync(call, startTime, startedAt, response: null, exception);
+            await RecordAsync(call, startTime, startedAt, response: null, exception, cancellationToken);
             throw;
         }
     }
@@ -48,7 +52,8 @@ public class ExternalServiceLogger(
         DateTime startTime,
         long startedAt,
         string? response,
-        Exception? exception) =>
+        Exception? exception,
+        CancellationToken cancellationToken = default) =>
         externalServiceLogStore.SaveAsync(new ExternalServiceLogRecordedEto
         {
             CorrelationId = correlationIdProvider.Get(),
@@ -61,7 +66,7 @@ public class ExternalServiceLogger(
             ResponseCode = ResolveResponseCode(exception),
             ExceptionMessage = exception?.Message,
             ResponseData = response
-        });
+        }, cancellationToken);
 
     // Cagri basariliysa 200, dis servis bir durum kodu dondurduyse onu, dondurmediyse sunucu hatasini yazar.
     private static int ResolveResponseCode(Exception? exception) => exception switch

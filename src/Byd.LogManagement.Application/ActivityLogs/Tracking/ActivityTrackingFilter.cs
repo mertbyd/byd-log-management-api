@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Localization;
+using Byd.CoreExtensions.Interfaces;
 using Byd.CoreExtensions.Providers;
 using Byd.LogManagement.Attributes;
 using Byd.LogManagement.Consts;
@@ -29,6 +30,7 @@ public class ActivityTrackingFilter(
     IStringLocalizerFactory stringLocalizerFactory,
     ICurrentUser currentUser,
     ICurrentTenant currentTenant,
+    ICurrentOrganization currentOrganization,
     CurrentModuleNameProvider moduleNameProvider) : IAsyncActionFilter, ITransientDependency
 {
     // Action'i calistirir; isaretli, oturumlu ve basarili sonucu etkinlik kaydina cevirir.
@@ -45,11 +47,12 @@ public class ActivityTrackingFilter(
 
         var record = result.GetValue();
         object[] arguments = [currentUser.UserName!, .. activity.Values.Select(name => Read(record, name)?.ToString() ?? string.Empty)];
-        // TODO: OrganizationId ve OrganizationName, auth modulu organizasyon bilgisini sagladiginda doldurulur.
         await activityLogStore.SaveAsync(new ActivityRecordedEto
         {
             TenantId = currentTenant.Id,
             TenantName = currentTenant.Name,
+            OrganizationId = currentOrganization.Id,
+            OrganizationName = currentOrganization.Name,
             UserId = currentUser.GetId(),
             UserName = currentUser.UserName!,
             ExternalId = Read(record, nameof(IEntityDto<Guid>.Id)) as Guid?,

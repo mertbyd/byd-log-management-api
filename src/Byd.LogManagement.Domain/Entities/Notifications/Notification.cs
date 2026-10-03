@@ -22,7 +22,7 @@ public class Notification : CreationAuditedEntity<Guid>, IMultiTenant
 {
     // Bildirimin olustugu tenant; host kayitlari icin bos.
     public Guid? TenantId { get; internal set; }
-    // Bildirimin olustugu organizasyon; auth modulu organizasyon bilgisini saglayana kadar bos.
+    // Bildirimin olustugu organizasyon; organizasyon secilmemis istekte bos.
     public Guid? OrganizationId { get; internal set; }
     // Ayni istekten dogan butun satirlari birbirine baglayan kimlik.
     public Guid NotificationGroupId { get; internal set; }
@@ -50,8 +50,8 @@ public class Notification : CreationAuditedEntity<Guid>, IMultiTenant
     public string Title { get; internal set; } = default!;
     // Mobil satirin gidecegi topic; doluysa satir alicilara degil topic uyelerine gider.
     public string? Topic { get; internal set; }
-    // Bildirimin tek bir aliciya degil tenant'taki herkese gittigini gosterir.
-    // TODO: IsTenantNotification, auth modulu organizasyon bilgisini sagladiginda organizasyon kapsamiyla birlikte guncellenir. çözüm yolu bulunucak !!!!!!!!!!!!!!1
+    // Bildirimin tek bir aliciya degil tenant'taki herkese gittigini gosterir. Organizasyon kayitta tasinir ama
+    // yayini daraltmaz.
     public bool IsTenantNotification { get; internal set; }
     // Bildirimin gonderilebilecegi en erken an.
     public DateTime ScheduledTime { get; internal set; }

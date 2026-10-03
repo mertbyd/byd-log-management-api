@@ -30,9 +30,14 @@ public class UserMobileTokenController : LogManagementController
     /// <param name="input">Firebase proje anahtari, mobil kayit token'i ve aktiflik durumu.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Request { FirebaseProjectKey, Token, IsActive }; Token FCM tarafindan uretilen kayit token'idir.
-    /// Kullanici kimligi oturumdan alinir, istekte gonderilmez. Ayni kullanicinin o projede mevcut bir kaydi varsa
-    /// yeni satir acilmaz; token ve aktiflik durumu guncellenir (upsert). Basarili istekte iceriksiz cevap dondurulur.
+    /// Request {
+    ///   FirebaseProjectKey (string)  → Token'in kaydedilecegi Firebase projesinin is kodu
+    ///   Token              (string)  → FCM'in urettigi kayit token'i
+    ///   LanguageCode       (string?) → Cihazin bildirim dili
+    ///   IsActive           (bool)    → Bildirim almanin acik olup olmadigi
+    /// }
+    /// Kullanici kimligi oturumdan alinir. Ayni kullanicinin o projede kaydi varsa yeni satir acilmaz; token, dil ve aktiflik
+    /// guncellenir. Basarili istekte iceriksiz cevap dondurulur.
     /// </remarks>
     [HttpPost]
     public virtual async Task<Result> RegisterAsync(
@@ -49,8 +54,11 @@ public class UserMobileTokenController : LogManagementController
     /// <param name="firebaseProjectKey">Bagli olunan Firebase projesinin benzersiz anahtari.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Mobil uygulama oturum kapanirken cagirir; kullanici bu proje icin bildirim almayi birakir. Kayit yoksa hata
-    /// vermez. Basarili istekte iceriksiz cevap dondurulur.
+    /// Request {
+    ///   firebaseProjectKey (string) → Kaydin silinecegi Firebase projesinin is kodu
+    /// }
+    /// Mobil uygulama oturum kapanirken cagirir; kullanici bu proje icin bildirim almayi birakir. Kayit yoksa hata vermez.
+    /// Basarili istekte iceriksiz cevap dondurulur.
     /// </remarks>
     [HttpDelete]
     public virtual async Task<Result> RemoveAsync(
@@ -67,7 +75,10 @@ public class UserMobileTokenController : LogManagementController
     /// <param name="firebaseProjectKey">Bagli olunan Firebase projesinin benzersiz anahtari.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
     /// <remarks>
-    /// Response value kullanicinin bildirim aktiflik durumunun acik olup olmadigini tasir. Kayitli token yoksa EntityNotFound
+    /// Request {
+    ///   firebaseProjectKey (string) → Firebase projesinin is kodu
+    /// }
+    /// Response (bool) kullanicinin bildirim aktiflik durumunun acik olup olmadigini tasir. Kayitli token yoksa EntityNotFound
     /// hata koduyla reddedilir.
     /// </remarks>
     [HttpGet(UserMobileTokenRoutes.Permit)]

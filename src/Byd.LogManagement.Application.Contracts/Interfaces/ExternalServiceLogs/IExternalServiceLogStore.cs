@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Byd.LogManagement.Etos.ExternalServiceLogs;
 
@@ -11,5 +12,5 @@ namespace Byd.LogManagement.Interfaces.ExternalServiceLogs;
 public interface IExternalServiceLogStore
 {
     // Dis servis log olayini merkezi log servisine teslim eder.
-    Task SaveAsync(ExternalServiceLogRecordedEto externalServiceLog);
+    Task SaveAsync(ExternalServiceLogRecordedEto externalServiceLog, CancellationToken cancellationToken = default);
 }
