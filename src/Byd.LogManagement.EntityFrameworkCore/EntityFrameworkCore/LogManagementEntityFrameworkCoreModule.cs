@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Byd.CoreExtensions.EntityFrameworkCore;
 using Byd.FileManagement.EntityFrameworkCore;
 using Byd.LogManagement.Extensions;
 using Volo.Abp.Auditing;
@@ -12,7 +11,6 @@ using Volo.Abp.Modularity;
 namespace Byd.LogManagement.EntityFrameworkCore;
 
 [DependsOn(
-    typeof(CoreExtensionsEntityFrameworkCoreModule),
     typeof(FileManagementEntityFrameworkCoreModule),
     typeof(AbpAuditLoggingEntityFrameworkCoreModule),
     typeof(LogManagementDomainModule),

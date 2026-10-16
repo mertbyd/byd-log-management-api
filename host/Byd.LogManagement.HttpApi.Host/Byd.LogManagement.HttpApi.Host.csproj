@@ -35,7 +35,7 @@
     <None Remove="Logs\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Byd.AuthManagement.EntityFrameworkCore" Version="0.1.2" />
+    <PackageReference Include="Byd.AuthManagement.EntityFrameworkCore" Version="0.1.4" />
   </ItemGroup>
 
 </Project>

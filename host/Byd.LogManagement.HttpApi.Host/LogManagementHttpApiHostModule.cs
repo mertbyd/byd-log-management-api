@@ -30,8 +30,6 @@ namespace Byd.LogManagement;
 
 [DependsOn(
     typeof(LogManagementCollectorModule),
-    typeof(LogManagementApplicationModule),
-    typeof(LogManagementEntityFrameworkCoreModule),
     typeof(LogManagementHttpApiModule),
     typeof(AuthManagementEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreMvcModule),
