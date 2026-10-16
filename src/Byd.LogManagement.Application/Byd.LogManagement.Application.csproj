@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Byd.FileManagement.Application" Version="0.1.3" />
+    <PackageReference Include="Byd.FileManagement.Application" Version="0.1.4" />
     <PackageReference Include="SystemStandards.Core" Version="2.0.0" />
   </ItemGroup>
 
