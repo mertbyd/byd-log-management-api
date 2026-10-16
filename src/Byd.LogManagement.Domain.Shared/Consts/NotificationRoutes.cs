@@ -18,4 +18,7 @@ public static class NotificationRoutes
 
     // SignalR bildirim hub'inin baglanti yoludur.
     public const string Hub = "/signalr-hubs/log-management/notifications";
+
+    // Tarayici baslik gonderemedigi icin hub baglantisinin access token'i tasidigi sorgu parametresidir.
+    public const string HubAccessTokenQueryName = "access_token";
 }

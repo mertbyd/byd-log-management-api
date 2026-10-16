@@ -26,6 +26,14 @@ Modul `Byd.CoreExtensions` ve `Byd.FileManagement` paketlerine baglidir; ikisini
   dis servis cagrisi icin `IExternalServiceLogger`. Kayitlar olay olarak merkeze gider.
 - Merkezi log host'u ayrica Collector paketini ekler: olay handler'lari, bildirim hub'i ve ileri tarihli bildirim
   iscisi yalniz orada calisir.
+- `[TrackActivity]` degerleri action'in dondurdugu kayittan okur; govde donmeyen action'da (silme) deger ve kayit kimligi ayni
+  adli action girdisinden (ornegin `id`) gelir.
+- Bildirim hub'i (`/signalr-hubs/log-management/notifications`) WebSocket ve SSE ile baglanir. Tarayici bu tasimalarda
+  baslik gonderemedigi icin access token `access_token` sorgu parametresiyle gelir; Collector modulu bunu host'un JWT
+  olaylarini bozmadan kendisi okur.
+- Audit kaydinin yeri `LogManagement.AuditLogSaveMode` ayariyla secilir: `Database` (varsayilan), `Elasticsearch` ya da
+  `Both`. Elasticsearch baglantisi core'un `CoreExtensions.Elasticsearch.*` ayarlarindan gelir; indeks
+  `log_management_audit_logs`'tur.
 
 ## Host baglantisi
 
