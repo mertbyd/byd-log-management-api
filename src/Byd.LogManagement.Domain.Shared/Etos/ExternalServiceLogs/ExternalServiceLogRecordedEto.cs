@@ -7,14 +7,26 @@ namespace Byd.LogManagement.Etos.ExternalServiceLogs;
 /// <summary>
 /// Uretici uygulamadan dis bir servise yapilan cagrinin dagitik olayi.
 /// </summary>
-// islevi: Cagrinin hedefini, suresini, yanitini ve hata alanlarini tasir.
+// islevi: Cagrinin kapsamini, hedefini, suresini, yanitini ve hata alanlarini tasir.
 // sistemdeki gorevi: Uretici uygulama ile merkezi log servisi arasindaki tel sozlesmesidir; sinif Domain.Shared'da
 // durdugu icin uretici uygulama kopya tutmaz, ayni tipi referans eder.
 [EventName(ExternalServiceLogEventNames.Recorded)]
 public class ExternalServiceLogRecordedEto
 {
+    // Cagrinin yapildigi tenant; host kapsamindaki cagrilar icin bos.
+    public Guid? TenantId { get; set; }
+
+    // Cagrinin yapildigi organizasyon; organizasyon kapsami disindaki cagrilar icin bos.
+    public Guid? OrganizationId { get; set; }
+
     // Cagriyi baslatan istegin correlation kimligi; ABP audit log satirindaki correlation_id ile ayni degerdir.
     public string? CorrelationId { get; set; }
+
+    // Cagri anindaki tenant adi.
+    public string? TenantName { get; set; }
+
+    // Cagri anindaki organizasyon adi.
+    public string? OrganizationName { get; set; }
 
     // Cagrilan dis servis saglayicisinin adi.
     public string ExternalServiceProviderName { get; set; } = default!;

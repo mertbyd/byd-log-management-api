@@ -24,6 +24,8 @@ Modul `Byd.CoreExtensions` ve `Byd.FileManagement` paketlerine baglidir; ikisini
 
 - Uretici uygulama Application paketini kullanir: etkinlik icin `[TrackActivity]`, bildirim icin `INotificationLogger`,
   dis servis cagrisi icin `IExternalServiceLogger`. Kayitlar olay olarak merkeze gider.
+- Dis servis kaydi cagrinin yapildigi tenant ve organizasyonu (kimlik ve ad) tasir; degerler cagri anindaki
+  `ICurrentTenant` ve `ICurrentOrganization`'dan okunur. Arka plan iscisi cagridan once kapsami degistirmelidir.
 - Merkezi log host'u ayrica Collector paketini ekler: olay handler'lari, bildirim hub'i ve ileri tarihli bildirim
   iscisi yalniz orada calisir.
 - `[TrackActivity]` degerleri action'in dondurdugu kayittan okur; govde donmeyen action'da (silme) deger ve kayit kimligi ayni

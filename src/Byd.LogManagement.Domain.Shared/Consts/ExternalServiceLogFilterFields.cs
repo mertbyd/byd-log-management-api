@@ -7,6 +7,8 @@
 // sistemdeki gorevi: Filtre DTO'su ile repository sorgu motoru arasindaki kararli alan adi sozlesmesidir.
 public static class ExternalServiceLogFilterFields
 {
+    public const string TenantId = "tenantId";
+    public const string OrganizationId = "organizationId";
     public const string CorrelationId = "correlationId";
     public const string ExternalServiceProviderName = "externalServiceProviderName";
     public const string ModuleName = "moduleName";
@@ -19,6 +21,8 @@ public static class ExternalServiceLogFilterFields
 
     public static class PropertyPaths
     {
+        public const string TenantId = "TenantId";
+        public const string OrganizationId = "OrganizationId";
         public const string CorrelationId = "CorrelationId";
         public const string ExternalServiceProviderName = "ExternalServiceProviderName";
         public const string ModuleName = "ModuleName";
