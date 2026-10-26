@@ -14,7 +14,8 @@ namespace Byd.LogManagement.Entities.Notifications;
 // Satir gonderimden ONCE yazilir: SentTime bos oldugu surece bildirim kuyruktadir ve degistirilebilir.
 // Ayni istekten dogan butun satirlar ayni NotificationGroupId'yi tasir; grup guncelleme ve iptal bu
 // kimlik uzerinden calisir, icerik esitligi uzerinden degil.
-// Tenant'taki herkese gidecegini IsTenantNotification soyler; bos RecipientUserId tek basina yayin demek degildir.
+// Kapsamdaki herkese (organizasyonda olustuysa organizasyona, degilse tenant'a) gidecegini IsTenantNotification soyler;
+// bos RecipientUserId tek basina yayin demek degildir.
 //
 // IMultiTenant: sorgular istegin tenant'iyla sinirlanir; butun tenant'lari tarayan isci filtreyi kendisi kapatir.
 // Navigation property yok: lookup adlari okuma ucunde cozulur.

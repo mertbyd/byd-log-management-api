@@ -39,13 +39,19 @@ public class SignalRNotificationWebSender(
         return Task.WhenAll(notifications.Select(notification => SendAsync(notification, cancellationToken)));
     }
 
-    // Tenant bildirimini tenant'taki herkese, digerini alicinin butun sekmelerine iletir.
+    // Yayin bildirimini kapsamindaki herkese, digerini alicinin butun sekmelerine iletir.
     private async Task SendAsync(Notification notification, CancellationToken cancellationToken = default)
     {
         var message = notification.ToWebMessage(notificationManager.TextOf(notification));
         var clients = notification.IsTenantNotification
-            ? hubContext.Clients.Group($"{NotificationConsts.TenantGroupPrefix}:{notification.TenantId}")
+            ? hubContext.Clients.Group(BroadcastGroup(notification))
             : hubContext.Clients.User($"{notification.RecipientUserId}");
         await clients.SendAsync(NotificationConsts.WebMessageName, message, cancellationToken);
     }
+
+    // Organizasyon kapsaminda olusan yayin organizasyonun grubuna, organizasyonsuz olusan yayin tenant grubuna gider.
+    private static string BroadcastGroup(Notification notification)
+        => notification.OrganizationId is null
+            ? $"{NotificationConsts.TenantGroupPrefix}:{notification.TenantId}"
+            : $"{NotificationConsts.OrganizationGroupPrefix}:{notification.OrganizationId}";
 }

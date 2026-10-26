@@ -101,6 +101,10 @@ public static class NotificationConsts
     // Tenant bildirimlerinin gittigi SignalR grubunun on ekidir; grup adi "<onek>:<tenantId>" seklindedir.
     public const string TenantGroupPrefix = "notification-tenant";
 
+    // Organizasyon kapsamindaki yayin bildirimlerinin gittigi SignalR grubunun on ekidir; grup adi
+    // "<onek>:<organizationId>" seklindedir.
+    public const string OrganizationGroupPrefix = "notification-organization";
+
     // Ileri tarihli web bildirimlerinin vadesi gelmis mi diye tarandigi aralik (saniye).
     public const int ScheduledScanPeriodSeconds = 10;
 }

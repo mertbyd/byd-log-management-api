@@ -52,7 +52,8 @@ public class NotificationRecordedEto
     // Bildirim basligi.
     public string Title { get; set; } = default!;
 
-    // Bildirimin tenant'taki herkese gidecegini gosterir; isaretliyse alici listesine bakilmaz.
+    // Bildirimin kapsamindaki herkese gidecegini gosterir: organizasyonda olustuysa organizasyona, degilse tenant'a;
+    // isaretliyse alici listesine bakilmaz.
     public bool IsTenantNotification { get; set; }
 
     // Bildirimin gonderilebilecegi en erken an; gecmis bir deger anlik gonderim demektir.
