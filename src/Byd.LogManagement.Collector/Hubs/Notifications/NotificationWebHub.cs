@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Byd.CoreExtensions.Interfaces;
@@ -22,10 +23,16 @@ public class NotificationWebHub : AbpHub
     // Baglantiyi tenant grubuna ve organizasyon grubuna ekler; yayin bildirimi kapsamina gore bu gruplardan birine gider.
     public override async Task OnConnectedAsync()
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, $"{NotificationConsts.TenantGroupPrefix}:{CurrentTenant.Id}");
+        await Groups.AddToGroupAsync(Context.ConnectionId, BroadcastGroup(CurrentTenant.Id, null));
         if (CurrentOrganization.Id is not null)
-            await Groups.AddToGroupAsync(Context.ConnectionId,
-                $"{NotificationConsts.OrganizationGroupPrefix}:{CurrentOrganization.Id}");
+            await Groups.AddToGroupAsync(Context.ConnectionId, BroadcastGroup(CurrentTenant.Id, CurrentOrganization.Id));
         await base.OnConnectedAsync();
     }
+
+    // Yayinin gittigi grup: organizasyon kapsamindaysa organizasyonun, degilse tenant'in grubu. Gonderici ve canli akis
+    // handler'i ayni adi kullanir.
+    public static string BroadcastGroup(Guid? tenantId, Guid? organizationId)
+        => organizationId is null
+            ? $"{NotificationConsts.TenantGroupPrefix}:{tenantId}"
+            : $"{NotificationConsts.OrganizationGroupPrefix}:{organizationId}";
 }

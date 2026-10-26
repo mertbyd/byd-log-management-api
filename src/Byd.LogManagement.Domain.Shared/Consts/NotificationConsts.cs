@@ -98,6 +98,9 @@ public static class NotificationConsts
     // Web istemcisine iletilen bildirim olayinin sabit adidir.
     public const string WebMessageName = "notificationReceived";
 
+    // Web istemcisine iletilen canli akis olayinin sabit adidir.
+    public const string StreamMessageName = "streamReceived";
+
     // Tenant bildirimlerinin gittigi SignalR grubunun on ekidir; grup adi "<onek>:<tenantId>" seklindedir.
     public const string TenantGroupPrefix = "notification-tenant";
 

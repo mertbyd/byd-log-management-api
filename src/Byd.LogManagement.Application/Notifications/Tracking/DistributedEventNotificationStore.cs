@@ -13,7 +13,8 @@ namespace Byd.LogManagement.Notifications.Tracking;
 /// </summary>
 // islevi: Yakalama noktasinin kurdugu olayi kendi calisma biriminde olay kutusuna yazip hemen tamamlar.
 // sistemdeki gorevi: Uretici uygulamanin merkezi bildirim veritabanina baglanmadan istek biraktigi store'dur.
-// Kayit, bildirimi isteyen isin calisma biriminden ayri tutulur; is geri alinsa da bildirim istegi kalir.
+// Kayit, bildirimi isteyen isin calisma biriminden ayri tutulur; is geri alinsa da bildirim istegi kalir. Canli akis
+// olay kutusuna yazilmaz, calisma birimi beklenmeden dogrudan tasima katmanina verilir.
 public class DistributedEventNotificationStore(
     IDistributedEventBus distributedEventBus,
     IUnitOfWorkManager unitOfWorkManager) : INotificationStore, ITransientDependency
@@ -23,6 +24,10 @@ public class DistributedEventNotificationStore(
         NotificationRecordedEto notification,
         CancellationToken cancellationToken = default) =>
         PublishAsync(notification, cancellationToken);
+
+    // Canli akisi olay kutusuna yazmadan ve calisma birimini beklemeden yayinlar.
+    public virtual Task StreamAsync(NotificationStreamedEto stream, CancellationToken cancellationToken = default) =>
+        distributedEventBus.PublishAsync(stream, onUnitOfWorkComplete: false, useOutbox: false);
 
     // Olayi cagiran isten ayri bir calisma biriminde yayinlar.
     private async Task PublishAsync<TEvent>(TEvent eventData, CancellationToken cancellationToken = default)

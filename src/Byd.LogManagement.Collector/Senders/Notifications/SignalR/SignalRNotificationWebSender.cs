@@ -44,14 +44,8 @@ public class SignalRNotificationWebSender(
     {
         var message = notification.ToWebMessage(notificationManager.TextOf(notification));
         var clients = notification.IsTenantNotification
-            ? hubContext.Clients.Group(BroadcastGroup(notification))
+            ? hubContext.Clients.Group(NotificationWebHub.BroadcastGroup(notification.TenantId, notification.OrganizationId))
             : hubContext.Clients.User($"{notification.RecipientUserId}");
         await clients.SendAsync(NotificationConsts.WebMessageName, message, cancellationToken);
     }
-
-    // Organizasyon kapsaminda olusan yayin organizasyonun grubuna, organizasyonsuz olusan yayin tenant grubuna gider.
-    private static string BroadcastGroup(Notification notification)
-        => notification.OrganizationId is null
-            ? $"{NotificationConsts.TenantGroupPrefix}:{notification.TenantId}"
-            : $"{NotificationConsts.OrganizationGroupPrefix}:{notification.OrganizationId}";
 }

@@ -6,6 +6,7 @@ using Byd.LogManagement.Dtos.Notifications;
 using Byd.LogManagement.Etos.Notifications;
 using Byd.LogManagement.Interfaces.Notifications;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Json;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Timing;
 using Volo.Abp.Users;
@@ -24,7 +25,8 @@ public class NotificationLogger(
     ICurrentTenant currentTenant,
     ICurrentOrganization currentOrganization,
     ICurrentUser currentUser,
-    IClock clock) : INotificationLogger, ITransientDependency
+    IClock clock,
+    IJsonSerializer jsonSerializer) : INotificationLogger, ITransientDependency
 {
     // Cagiranin kaydini baglam alanlariyla tamamlayip merkezi servise birakir; vade verilmediyse anlik kabul edilir.
     public virtual Task NotifyAsync(NotificationRecord record, CancellationToken cancellationToken = default) =>
@@ -47,6 +49,19 @@ public class NotificationLogger(
                 ScheduledTime = record.ScheduledTime ?? clock.Now,
                 Data = record.Data,
                 Recipients = record.Recipients
+            },
+            cancellationToken);
+
+    // Canli akisi kapsamiyla birlikte JSON olarak merkezi servise iletir; iletilemezse yerini bir sonraki akis alir.
+    public virtual Task StreamAsync(string name, object payload, CancellationToken cancellationToken = default) =>
+        notificationStore.StreamAsync(
+            new NotificationStreamedEto
+            {
+                TenantId = currentTenant.Id,
+                OrganizationId = currentOrganization.Id,
+                ModuleName = moduleNameProvider.Value,
+                Name = name,
+                Payload = jsonSerializer.Serialize(payload)
             },
             cancellationToken);
 }
