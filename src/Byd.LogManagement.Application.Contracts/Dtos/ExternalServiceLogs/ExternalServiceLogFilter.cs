@@ -11,6 +11,12 @@ namespace Byd.LogManagement.Dtos.ExternalServiceLogs;
 // sistemdeki gorevi: Dis servis cagri kaydi liste ve sayim uclarinin tipli filtre izin listesidir.
 public class ExternalServiceLogFilter
 {
+    [DataTable(ExternalServiceLogFilterFields.TenantId, ExternalServiceLogFilterFields.PropertyPaths.TenantId)]
+    public DataTableFilterItem? TenantId { get; set; }
+
+    [DataTable(ExternalServiceLogFilterFields.OrganizationId, ExternalServiceLogFilterFields.PropertyPaths.OrganizationId)]
+    public DataTableFilterItem? OrganizationId { get; set; }
+
     [DataTable(ExternalServiceLogFilterFields.CorrelationId, ExternalServiceLogFilterFields.PropertyPaths.CorrelationId)]
     public DataTableFilterItem? CorrelationId { get; set; }
 

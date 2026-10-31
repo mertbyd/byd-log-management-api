@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Localization;
+using Byd.CoreExtensions.Interfaces;
 using Byd.CoreExtensions.Providers;
 using Byd.LogManagement.Attributes;
 using Byd.LogManagement.Consts;
@@ -23,12 +24,14 @@ namespace Byd.LogManagement.ActivityLogs.Tracking;
 /// TrackActivity isaretli action basariyla bittiginde etkinlik kaydini store'a verir.
 /// </summary>
 // islevi: Kalip anahtarini, kullanici adi ve donen kaydin alanlarindan olusan degerleri ve uretici modulun dil kaliplarini olaya koyar.
+// Govde donmeyen action'da (silme) deger ve kayit kimligi ayni adli action girdisinden okunur.
 // sistemdeki gorevi: Uretici uygulamada etkinligin yakalandigi tek noktadir; cumle burada kurulmaz, listelerken kurulur.
 public class ActivityTrackingFilter(
     IActivityLogStore activityLogStore,
     IStringLocalizerFactory stringLocalizerFactory,
     ICurrentUser currentUser,
     ICurrentTenant currentTenant,
+    ICurrentOrganization currentOrganization,
     CurrentModuleNameProvider moduleNameProvider) : IAsyncActionFilter, ITransientDependency
 {
     // Action'i calistirir; isaretli, oturumlu ve basarili sonucu etkinlik kaydina cevirir.
@@ -44,15 +47,16 @@ public class ActivityTrackingFilter(
         }
 
         var record = result.GetValue();
-        object[] arguments = [currentUser.UserName!, .. activity.Values.Select(name => Read(record, name)?.ToString() ?? string.Empty)];
-        // TODO: OrganizationId ve OrganizationName, auth modulu organizasyon bilgisini sagladiginda doldurulur.
+        object[] arguments = [currentUser.UserName!, .. activity.Values.Select(name => Read(context, record, name)?.ToString() ?? string.Empty)];
         await activityLogStore.SaveAsync(new ActivityRecordedEto
         {
             TenantId = currentTenant.Id,
             TenantName = currentTenant.Name,
+            OrganizationId = currentOrganization.Id,
+            OrganizationName = currentOrganization.Name,
             UserId = currentUser.GetId(),
             UserName = currentUser.UserName!,
-            ExternalId = Read(record, nameof(IEntityDto<Guid>.Id)) as Guid?,
+            ExternalId = Read(context, record, nameof(IEntityDto<Guid>.Id)) as Guid?,
             ApplicationName = moduleNameProvider.Value,
             Kind = activity.Kind,
             Description = Describe(activity, arguments)
@@ -75,6 +79,12 @@ public class ActivityTrackingFilter(
         return description;
     }
 
-    // Donen kaydin verilen adli alanini okur.
-    private static object? Read(object? record, string name) => record?.GetType().GetProperty(name)?.GetValue(record);
+    // Donen kaydin verilen adli alanini okur; kayit yoksa ya da alani tasimiyorsa ayni adli action girdisini doner.
+    private static object? Read(ActionExecutingContext context, object? record, string name)
+    {
+        return record?.GetType().GetProperty(name)?.GetValue(record)
+               ?? context.ActionArguments
+                   .FirstOrDefault(argument => string.Equals(argument.Key, name, StringComparison.OrdinalIgnoreCase))
+                   .Value;
+    }
 }

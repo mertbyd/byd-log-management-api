@@ -6,12 +6,23 @@ namespace Byd.LogManagement.Entities.ExternalServiceLogs;
 /// <summary>
 /// Merkezi olarak saklanan dis servis cagri kaydini tasir.
 /// </summary>
-// islevi: Cagri basina tek satirda hedefi, sonucu, suresi ve hata alanlarini saklar.
+// islevi: Cagri basina tek satirda kapsami, hedefi, sonucu, suresi ve hata alanlarini saklar.
 // sistemdeki gorevi: Kurallari Manager'a birakan veri kabugudur.
+//
+// IMultiTenant yok: kayitlar merkezi log servisinde butun uygulamalardan toplanir; tenant filtresi uygulanmaz,
+// TenantId ve OrganizationId yalniz cagrinin hangi kapsamda yapildigini gosterir.
 public class ExternalServiceLog : CreationAuditedEntity<Guid>
 {
+    // Cagrinin yapildigi tenant; host kapsamindaki cagrilar icin bos.
+    public Guid? TenantId { get; internal set; }
+    // Cagrinin yapildigi organizasyon; organizasyon kapsami disindaki cagrilar icin bos.
+    public Guid? OrganizationId { get; internal set; }
     // Cagriyi baslatan istegin correlation kimligi; ABP audit log satirindaki correlation_id ile ayni degerdir.
     public string? CorrelationId { get; internal set; }
+    // Cagri anindaki tenant adi.
+    public string? TenantName { get; internal set; }
+    // Cagri anindaki organizasyon adi.
+    public string? OrganizationName { get; internal set; }
     // Cagrilan dis servis saglayicisinin adi.
     public string ExternalServiceProviderName { get; internal set; } = default!;
     // Cagriyi yapan tuketici modulun adi.

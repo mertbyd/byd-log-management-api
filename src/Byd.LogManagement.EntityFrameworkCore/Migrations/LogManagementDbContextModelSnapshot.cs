@@ -130,6 +130,14 @@ namespace Byd.LogManagement.Migrations
                         .HasColumnType("text")
                         .HasColumnName("module_name");
 
+                    b.Property<Guid?>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<string>("OrganizationName")
+                        .HasColumnType("text")
+                        .HasColumnName("organization_name");
+
                     b.Property<string>("RequestType")
                         .IsRequired()
                         .HasColumnType("text")
@@ -146,6 +154,14 @@ namespace Byd.LogManagement.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("start_time");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("TenantName")
+                        .HasColumnType("text")
+                        .HasColumnName("tenant_name");
 
                     b.HasKey("Id")
                         .HasName("pk_external_service_logs");

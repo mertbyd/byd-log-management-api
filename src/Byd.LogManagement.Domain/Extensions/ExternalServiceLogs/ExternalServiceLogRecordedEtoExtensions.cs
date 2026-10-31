@@ -15,7 +15,11 @@ public static class ExternalServiceLogRecordedEtoExtensions
     {
         return new ExternalServiceLog
         {
+            TenantId = source.TenantId,
+            OrganizationId = source.OrganizationId,
             CorrelationId = source.CorrelationId,
+            TenantName = source.TenantName,
+            OrganizationName = source.OrganizationName,
             ExternalServiceProviderName = source.ExternalServiceProviderName,
             ModuleName = source.ModuleName,
             MethodName = source.MethodName,

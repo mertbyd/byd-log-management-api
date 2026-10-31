@@ -50,15 +50,12 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
         => Mapper.Map(await Repository.GetListAsync(includeDetails: false, cancellationToken: cancellationToken));
 
     // Create girdisini dogrular, Manager ile entity kurar ve tek UOW icinde kaydeder.
-    // Kapsam istekte gelen tenant'tir: tekillik kontrolleri ve kayit o tenant icinde yapilir.
-    // TODO: Auth modulu bagalandiginda burdaki tanet işinin nasıl yürütüleceği mentörlere sorulacak tanet dışardan mı verilmeli  yoksa o an login olan kullanıcının tanetına mı göre olmalı
+    // Kapsam istegi yapan kullanicinin tenant'idir: tekillik kontrolleri ve kayit o tenant icinde yapilir.
     public virtual async Task<FirebaseProjectDto> CreateAsync(
         CreateFirebaseProjectDto input,
         CancellationToken cancellationToken = default)
     {
         await CreateValidator.ValidateAndThrowAsync(input, cancellationToken);
-        // Tenant verilmediyse istegin kendi kapsami korunur; verildiyse o kapsama gecilir.
-        using var tenant = CurrentTenant.Change(input.TenantId ?? CurrentTenant.Id);
         var model = Mapper.Map(input);
         var entity = await Manager.CreateAsync(model, cancellationToken);
         await Repository.InsertAsync(entity, autoSave: true, cancellationToken: cancellationToken);
@@ -96,24 +93,21 @@ public class FirebaseProjectAppService : LogManagementAppService, IFirebaseProje
     }
     // Secret girdisini dogrular, yeni dosyayi yukler ve projenin onceki secret dosyalarini siler.
     // Yeni dosya once yuklenir: yukleme basarisiz olursa eski secret yerinde kalir.
-    // Kapsam istekte gelen tenant'tir: proje o tenant'ta aranir ve dosya o tenant'a yazilir.
-    // TODO: Auth modulu bagalandiginda tenant istekten alinmayacak, kullanicinin token'indan okunacak.
+    // Kapsam istegi yapan kullanicinin tenant'idir: proje o tenant'ta aranir ve dosya o tenant'a yazilir.
     public virtual async Task UploadSecretAsync(
         Guid id,
         UploadFirebaseProjectSecretDto input,
         CancellationToken cancellationToken = default)
     {
         await UploadSecretValidator.ValidateAndThrowAsync(input, cancellationToken);
-        // Tenant verilmediyse istegin kendi kapsami korunur; verildiyse o kapsama gecilir.
-        using var tenant = CurrentTenant.Change(input.TenantId ?? CurrentTenant.Id);
         var entity = (await Manager.TryGetByIdAsync(
             id,
             throwIfNotExists: true,
             cancellationToken))!;
         var category = await Manager.GetSecretCategoryAsync(cancellationToken);
-        var previousFiles = await StoredFileAppService.GetListByCategoryAsync(entity.Id, category.Id);
-        await StoredFileAppService.UploadAsync(Mapper.Map(input, entity.Id, category.Id));
+        var previousFiles = await StoredFileAppService.GetListByCategoryAsync(entity.Id, category.Id, cancellationToken);
+        await StoredFileAppService.UploadAsync(Mapper.Map(input, entity.Id, category.Id), cancellationToken);
         foreach (var file in previousFiles)
-            await StoredFileAppService.DeleteAsync(file.Id);
+            await StoredFileAppService.DeleteAsync(file.Id, cancellationToken);
     }
 }

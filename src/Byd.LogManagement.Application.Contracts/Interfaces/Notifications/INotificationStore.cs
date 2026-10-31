@@ -13,4 +13,7 @@ public interface INotificationStore
 {
     // Bildirim istegini merkezi servise birakir.
     Task SaveAsync(NotificationRecordedEto notification, CancellationToken cancellationToken = default);
+
+    // Canli akisi olay kutusuna yazmadan merkezi servise iletir.
+    Task StreamAsync(NotificationStreamedEto stream, CancellationToken cancellationToken = default);
 }

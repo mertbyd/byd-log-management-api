@@ -30,12 +30,24 @@ public class NotificationController : LogManagementController
     /// </summary>
     /// <param name="input">Atlanacak kayit sayisi ve sayfa buyuklugu.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
-    /// <returns>Toplam kayit sayisi ve sayfadaki bildirimler.</returns>
     /// <remarks>
-    /// Response value, eslesen toplam kayit sayisini ve sayfadaki bildirimleri tasir; her eleman Id, baslik,
-    /// istegin dilinde secilmis metin, okundu durumu ve gonderim anini icerir. Yalnizca oturum kullanicisina
-    /// yazilmis ve gonderimi tamamlanmis satirlar doner; kuyrukta bekleyen ve tenant geneline yazilan satirlar
-    /// bu listede yer almaz. Bu endpoint okundu durumunu degistirmez.
+    /// Request {
+    ///   SkipCount      (int) → Atlanacak kayit sayisi
+    ///   MaxResultCount (int) → Sayfa boyutu
+    /// }
+    /// Response {
+    ///   TotalCount (long)              → Filtreye uyan toplam kayit sayisi
+    ///   Items      (NotificationDto[]) → Sayfadaki kayitlar; alanlari asagida
+    /// }
+    /// NotificationDto {
+    ///   Id          (Guid)      → Bildirim Id'si
+    ///   Title       (string)    → Bildirim basligi
+    ///   Description (string)    → Istegin dilinde secilmis metin
+    ///   IsRead      (bool)      → Okundu durumu
+    ///   SentTime    (DateTime?) → Gonderim ani
+    /// }
+    /// Yalnizca oturum kullanicisina yazilmis ve gonderimi tamamlanmis satirlar doner; kuyrukta bekleyen ve tenant geneline
+    /// yazilan satirlar bu listede yer almaz. Bu endpoint okundu durumunu degistirmez.
     /// </remarks>
     [HttpGet(NotificationRoutes.List)]
     public virtual async Task<Result<PagedResultDto<NotificationDto>>> GetListAsync(
@@ -52,8 +64,11 @@ public class NotificationController : LogManagementController
     /// <param name="id">Guncellenecek bildirimin kimligi.</param>
     /// <param name="isRead">Bildirimin yeni okundu durumu.</param>
     /// <param name="cancellationToken">Istek iptal belirteci.</param>
-    /// <returns>Iceriksiz basari cevabi.</returns>
     /// <remarks>
+    /// Request {
+    ///   id     (Guid) → Bildirim Id'si (route)
+    ///   isRead (bool) → Yeni okundu durumu
+    /// }
     /// Yalnizca oturum kullanicisina ait bildirimi gunceller; cevap govdesi dondurmez.
     /// </remarks>
     [HttpPut(NotificationRoutes.ReadStatus)]

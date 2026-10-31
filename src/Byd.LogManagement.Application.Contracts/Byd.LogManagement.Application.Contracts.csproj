@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Byd.CoreExtensions.Application.Contracts" Version="0.3.2" />
-    <ProjectReference Include="..\..\..\byd-file-management-api\src\Byd.FileManagement.Application.Contracts\Byd.FileManagement.Application.Contracts.csproj" />
+    <PackageReference Include="Byd.FileManagement.Application.Contracts" Version="0.1.5" />
   </ItemGroup>
 </Project>

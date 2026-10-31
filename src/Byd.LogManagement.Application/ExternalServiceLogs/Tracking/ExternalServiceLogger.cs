@@ -2,12 +2,15 @@ using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Byd.CoreExtensions.Interfaces;
 using Byd.CoreExtensions.Providers;
 using Byd.LogManagement.Dtos.ExternalServiceLogs;
 using Byd.LogManagement.Etos.ExternalServiceLogs;
 using Byd.LogManagement.Interfaces.ExternalServiceLogs;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.MultiTenancy;
 using Volo.Abp.Timing;
 using Volo.Abp.Tracing;
 
@@ -16,28 +19,34 @@ namespace Byd.LogManagement.ExternalServiceLogs.Tracking;
 /// <summary>
 /// Dis servis cagrisini calistirir ve sonucunu merkezi log servisine birakir.
 /// </summary>
-// islevi: Cagriyi sure olcerek calistirir ve cagri nasil biterse bitsin sonucu tek seferde olaya cevirip yayinlar.
+// islevi: Cagriyi sure olcerek calistirir ve cagri nasil biterse bitsin sonucu yapildigi kapsamla tek seferde olaya
+// cevirip yayinlar.
 // sistemdeki gorevi: Uretici uygulamada dis servis cagrisinin yakalandigi tek noktadir.
 public class ExternalServiceLogger(
     IExternalServiceLogStore externalServiceLogStore,
     CurrentModuleNameProvider moduleNameProvider,
     ICorrelationIdProvider correlationIdProvider,
+    ICurrentTenant currentTenant,
+    ICurrentOrganization currentOrganization,
     IClock clock) : IExternalServiceLogger, ITransientDependency
 {
     // Cagriyi calistirir; yanitini ve suresini merkezi log servisine birakir, istisnayi oldugu gibi yukari verir.
-    public virtual async Task<string> TrackAsync(ExternalServiceCall call, Func<Task<string>> work)
+    public virtual async Task<string> TrackAsync(
+        ExternalServiceCall call,
+        Func<Task<string>> work,
+        CancellationToken cancellationToken = default)
     {
         var startTime = clock.Now;
         var startedAt = Stopwatch.GetTimestamp();
         try
         {
             var response = await work();
-            await RecordAsync(call, startTime, startedAt, response, exception: null);
+            await RecordAsync(call, startTime, startedAt, response, exception: null, cancellationToken);
             return response;
         }
         catch (Exception exception)
         {
-            await RecordAsync(call, startTime, startedAt, response: null, exception);
+            await RecordAsync(call, startTime, startedAt, response: null, exception, cancellationToken);
             throw;
         }
     }
@@ -48,9 +57,14 @@ public class ExternalServiceLogger(
         DateTime startTime,
         long startedAt,
         string? response,
-        Exception? exception) =>
+        Exception? exception,
+        CancellationToken cancellationToken = default) =>
         externalServiceLogStore.SaveAsync(new ExternalServiceLogRecordedEto
         {
+            TenantId = currentTenant.Id,
+            TenantName = currentTenant.Name,
+            OrganizationId = currentOrganization.Id,
+            OrganizationName = currentOrganization.Name,
             CorrelationId = correlationIdProvider.Get(),
             ExternalServiceProviderName = call.ProviderName,
             ModuleName = moduleNameProvider.Value,
@@ -61,7 +75,7 @@ public class ExternalServiceLogger(
             ResponseCode = ResolveResponseCode(exception),
             ExceptionMessage = exception?.Message,
             ResponseData = response
-        });
+        }, cancellationToken);
 
     // Cagri basariliysa 200, dis servis bir durum kodu dondurduyse onu, dondurmediyse sunucu hatasini yazar.
     private static int ResolveResponseCode(Exception? exception) => exception switch

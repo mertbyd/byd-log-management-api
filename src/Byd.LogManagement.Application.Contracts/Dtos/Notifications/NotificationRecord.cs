@@ -24,7 +24,8 @@ public sealed record NotificationRecord(
     // Bildirimin dokundugu is kaydinin uretici uygulamadaki kimligi.
     public Guid? ExternalId { get; init; }
 
-    // Bildirimin tenant'taki herkese gidecegini gosterir; isaretliyse alici listesine bakilmaz.
+    // Bildirimin kapsamindaki herkese gidecegini gosterir: organizasyonda olustuysa organizasyona, degilse tenant'a;
+    // isaretliyse alici listesine bakilmaz.
     public bool IsTenantNotification { get; init; }
 
     // Bildirimin gonderilebilecegi en erken an; verilmezse bildirim anlik gonderim icin kuyruga girer.

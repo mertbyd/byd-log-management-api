@@ -89,7 +89,8 @@ public class FirebaseNotificationMobileSender(
         var category = await firebaseProjectManager.GetSecretCategoryAsync(cancellationToken);
         var files = await storedFileAppService.GetListWithContentByExternalIdAndCategoryAsync(
             firebaseProjectId,
-            category.Id);
+            category.Id,
+            cancellationToken);
         return firebaseProjectManager.FindLatestSecret(files.ToFirebaseProjectSecrets());
     }
 

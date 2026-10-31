@@ -10,5 +10,8 @@ public static class NotificationEventNames
     // Uretici uygulama bildirim istediginde yayinlanir; Collector satirlari kuyruga yazar.
     public const string Recorded = "LogManagement.Notifications.Recorded";
 
+    // Uretici uygulama canli akis gonderdiginde yayinlanir; Collector satir yazmadan web istemcilerine iter.
+    public const string Streamed = "LogManagement.Notifications.Streamed";
+
 
 }

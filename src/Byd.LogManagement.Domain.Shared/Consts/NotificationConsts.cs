@@ -98,8 +98,15 @@ public static class NotificationConsts
     // Web istemcisine iletilen bildirim olayinin sabit adidir.
     public const string WebMessageName = "notificationReceived";
 
+    // Web istemcisine iletilen canli akis olayinin sabit adidir.
+    public const string StreamMessageName = "streamReceived";
+
     // Tenant bildirimlerinin gittigi SignalR grubunun on ekidir; grup adi "<onek>:<tenantId>" seklindedir.
     public const string TenantGroupPrefix = "notification-tenant";
+
+    // Organizasyon kapsamindaki yayin bildirimlerinin gittigi SignalR grubunun on ekidir; grup adi
+    // "<onek>:<organizationId>" seklindedir.
+    public const string OrganizationGroupPrefix = "notification-organization";
 
     // Ileri tarihli web bildirimlerinin vadesi gelmis mi diye tarandigi aralik (saniye).
     public const int ScheduledScanPeriodSeconds = 10;
